@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pembayaran Berhasil! | AI Arbitrage Blueprint</title>
+    <link rel="stylesheet" href="/src/style.css" />
+
+    <!-- Meta Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '2075329529696205');
+        fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+            src="https://www.facebook.com/tr?id=2075329529696205&ev=PageView&noscript=1" /></noscript>
+    <!-- End Meta Pixel Code -->
+
+    <style>
+        .thank-you {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: var(--spacing-2xl);
+        }
+
+        .thank-you__content {
+            max-width: 600px;
+        }
+
+        .thank-you__icon {
+            font-size: 5rem;
+            margin-bottom: var(--spacing-xl);
+            animation: bounce 1s ease infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .thank-you__title {
+            font-size: var(--font-size-4xl);
+            font-weight: 800;
+            margin-bottom: var(--spacing-md);
+            background: linear-gradient(135deg, var(--color-success) 0%, var(--color-blue-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .thank-you__subtitle {
+            font-size: var(--font-size-xl);
+            color: var(--color-text-secondary);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .thank-you__name {
+            font-size: var(--font-size-lg);
+            color: var(--color-blue-light);
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .next-steps {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-blue-primary);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            text-align: left;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .next-steps__title {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            color: var(--color-text-primary);
+            margin-bottom: var(--spacing-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .next-steps__list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .next-steps__item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-md);
+            color: var(--color-text-secondary);
+        }
+
+        .next-steps__number {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            background: var(--color-blue-primary);
+            color: white;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: var(--font-size-sm);
+        }
+
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            width: 100%;
+            max-width: 400px;
+            padding: var(--spacing-lg) var(--spacing-2xl);
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: white;
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            border-radius: var(--radius-lg);
+            text-decoration: none;
+            transition: all var(--transition-base);
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
+        }
+
+        .whatsapp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(37, 211, 102, 0.4);
+            color: white;
+        }
+
+        .whatsapp-icon {
+            font-size: 1.5rem;
+        }
+
+        .important-note {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid var(--color-blue-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+            text-align: center;
+        }
+
+        .important-note__title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            font-weight: 600;
+            color: var(--color-blue-light);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .important-note__text {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+        }
+
+        .order-info {
+            margin-top: var(--spacing-xl);
+            padding: var(--spacing-md);
+            background: var(--color-bg-tertiary);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+        }
+
+        .order-info span {
+            color: var(--color-text-secondary);
+        }
+    </style>
+</head>
+
+<body>
+    <section class="thank-you">
+        <div class="thank-you__content">
+            <div class="thank-you__icon">🎉</div>
+
+            <h1 class="thank-you__title">Pembayaran Berhasil!</h1>
+
+            <p class="thank-you__subtitle">
+                Selamat datang di Batch 8!<br>
+                Lo udah ambil langkah pertama. 💪
+            </p>
+
+            <p class="thank-you__name" id="customer-greeting"></p>
+
+            <div class="next-steps">
+                <h2 class="next-steps__title">
+                    📋 Langkah Selanjutnya:
+                </h2>
+                <ul class="next-steps__list">
+                    <li class="next-steps__item">
+                        <span class="next-steps__number">1</span>
+                        <span><strong>Klik tombol WhatsApp di bawah</strong> untuk konfirmasi pembayaran dan dapat akses
+                            ke grup + materi</span>
+                    </li>
+                    <li class="next-steps__item">
+                        <span class="next-steps__number">2</span>
+                        <span><strong>Tim kami akan guide lo</strong> untuk langkah selanjutnya</span>
+                    </li>
+                    <li class="next-steps__item">
+                        <span class="next-steps__number">3</span>
+                        <span><strong>Mulai Day 1</strong> — Framework 30 hari dimulai!</span>
+                    </li>
+                </ul>
+            </div>
+
+            <a href="#" id="whatsapp-btn" class="whatsapp-btn" target="_blank">
+                <span class="whatsapp-icon">📱</span>
+                Konfirmasi via WhatsApp
+            </a>
+
+            <div class="important-note">
+                <div class="important-note__title">
+                    ⚠️ PENTING
+                </div>
+                <p class="important-note__text">
+                    Pastikan klik tombol di atas untuk konfirmasi pembayaran.<br>
+                    Tim kami akan bantu lo masuk ke grup dan dapat akses materi.
+                </p>
+            </div>
+
+            <div class="order-info" id="order-info"></div>
+        </div>
+    </section>
+
+    <script>
+        // Get order_id from URL params (iPaymu redirect) or localStorage fallback
+        const urlParams = new URLSearchParams(window.location.search);
+        const customerName = localStorage.getItem('customerName') || 'Customer';
+        const customerEmail = localStorage.getItem('customerEmail') || '';
+        const customerWhatsApp = localStorage.getItem('customerWhatsApp') || '';
+        const orderId = urlParams.get('order_id') || localStorage.getItem('orderId') || '';
+        const trxId = urlParams.get('trx_id') || '';
+
+        // Display greeting
+        const greetingEl = document.getElementById('customer-greeting');
+        if (customerName && customerName !== 'Customer') {
+            greetingEl.textContent = `Hai, ${customerName}!`;
+        }
+
+        // Display order info
+        const orderInfoEl = document.getElementById('order-info');
+        if (orderId) {
+            orderInfoEl.innerHTML = `Order ID: <span>${orderId}</span>`;
+        }
+
+        // Create WhatsApp message
+        const whatsappNumber = '6288988988918';
+        const message = `Halo, saya sudah melakukan pembayaran AI Arbitrage Blueprint Batch 8.
+
+Nama: ${customerName}
+Email: ${customerEmail}
+WhatsApp: ${customerWhatsApp}
+Order ID: ${orderId}
+
+Mohon bantu untuk akses ke grup dan materi selanjutnya. Terima kasih! 🙏`;
+
+        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+        document.getElementById('whatsapp-btn').href = whatsappUrl;
+
+        // Purchase tracking is now handled server-side by check-status.js (primary)
+        // and ipaymu-webhook.js (backup). This page is display-only.
+
+        // Send n8n webhook for payment success confirmation
+        if (orderId) {
+            try {
+                fetch('https://n8n.sixzenith.space/webhook/88ai', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        event: 'payment_success',
+                        customer: {
+                            name: customerName,
+                            email: customerEmail,
+                            whatsapp: customerWhatsApp,
+                        },
+                        order: {
+                            order_id: orderId,
+                            transaction_id: trxId,
+                        },
+                        product: 'AI Arbitrage Blueprint - Batch 8 Presale 2',
+                        amount: 96000,
+                        timestamp: new Date().toISOString(),
+                    }),
+                });
+            } catch (e) { console.error('n8n webhook error:', e); }
+        }
+    </script>
+</body>
+
+</html>

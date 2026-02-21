@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout | AI Arbitrage Blueprint — Batch 8</title>
+    <link rel="stylesheet" href="/src/style.css" />
+
+    <!-- Meta Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '2075329529696205');
+        fbq('track', 'PageView');
+        fbq('track', 'InitiateCheckout', {
+            content_name: 'AI Arbitrage Blueprint - Batch 8',
+            content_category: 'Course',
+            value: 96000,
+            currency: 'IDR'
+        }, { eventID: 'IC_' + Date.now() });
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+            src="https://www.facebook.com/tr?id=2075329529696205&ev=PageView&noscript=1" /></noscript>
+    <!-- End Meta Pixel Code -->
+
+    <style>
+        .checkout {
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: var(--spacing-lg) var(--spacing-md);
+            padding-top: var(--spacing-2xl);
+        }
+
+        .checkout__container {
+            width: 100%;
+            max-width: 460px;
+        }
+
+        /* Header */
+        .checkout__header {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+        }
+        .checkout__title {
+            font-size: var(--font-size-2xl);
+            font-weight: 800;
+            margin-bottom: 4px;
+            background: linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-blue-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .checkout__subtitle {
+            color: var(--color-text-muted);
+            font-size: var(--font-size-sm);
+        }
+
+        /* Cards */
+        .checkout__card {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-bg-tertiary);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+        }
+
+        /* Product summary - compact */
+        .checkout__product {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .checkout__product-name {
+            font-weight: 700;
+            font-size: var(--font-size-base);
+            color: var(--color-text-primary);
+        }
+        .checkout__product-batch {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+            margin-top: 2px;
+        }
+        .checkout__product-price {
+            font-size: var(--font-size-lg);
+            font-weight: 800;
+            color: var(--color-blue-light);
+            text-align: right;
+        }
+        .checkout__product-save {
+            font-size: 0.65rem;
+            color: var(--color-success);
+            text-align: right;
+            margin-top: 2px;
+            opacity: 0.8;
+        }
+
+        /* Urgency bar */
+        .checkout__urgency {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: linear-gradient(135deg, rgba(59,130,246,0.1) 0%, rgba(59,130,246,0.05) 100%);
+            border: 1px solid rgba(59,130,246,0.2);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-md);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            color: var(--color-blue-light);
+        }
+
+        /* Form */
+        .checkout__form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-group__label {
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .form-group__label span { color: var(--color-error); }
+        .form-group__input {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--color-bg-secondary);
+            border: 1.5px solid var(--color-bg-tertiary);
+            border-radius: var(--radius-md);
+            color: var(--color-text-primary);
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-group__input:focus {
+            outline: none;
+            border-color: var(--color-blue-primary);
+            box-shadow: 0 0 0 3px var(--color-blue-glow);
+        }
+        .form-group__input::placeholder { color: var(--color-text-muted); }
+        .form-group__input.error { border-color: var(--color-error); }
+        .form-group__hint {
+            font-size: 0.7rem;
+            color: var(--color-text-muted);
+        }
+        .form-error {
+            color: var(--color-error);
+            font-size: var(--font-size-xs);
+            display: none;
+        }
+
+        /* Divider */
+        .form-divider {
+            height: 1px;
+            background: var(--color-bg-tertiary);
+            margin: var(--spacing-sm) 0;
+        }
+
+        /* Payment method picker */
+        .payment-section__title {
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: var(--spacing-sm);
+        }
+        .payment-methods {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .payment-method-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 14px 8px;
+            background: var(--color-bg-secondary);
+            border: 1.5px solid var(--color-bg-tertiary);
+            border-radius: var(--radius-md);
+            color: var(--color-text-primary);
+            font-family: var(--font-family);
+            font-size: var(--font-size-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .payment-method-btn:hover {
+            border-color: var(--color-blue-primary);
+            background: rgba(59, 130, 246, 0.05);
+        }
+        .payment-method-btn.selected {
+            border-color: var(--color-blue-primary);
+            background: rgba(59, 130, 246, 0.1);
+            box-shadow: 0 0 0 1px var(--color-blue-primary);
+        }
+        .payment-method-btn__logo {
+            height: 24px;
+            width: auto;
+            max-width: 80px;
+            object-fit: contain;
+        }
+        .payment-method-btn__logo--qris {
+            height: 28px;
+        }
+        .payment-method-btn__name {
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-align: center;
+            line-height: 1.3;
+        }
+        /* QRIS spans full width */
+        .payment-method-btn--full {
+            grid-column: 1 / -1;
+            flex-direction: row;
+            gap: var(--spacing-sm);
+            padding: 12px 16px;
+        }
+        .payment-method-btn--full .payment-method-btn__name {
+            font-size: var(--font-size-sm);
+        }
+
+        /* Submit */
+        .checkout__submit {
+            margin-top: var(--spacing-sm);
+            padding: 16px;
+            font-size: var(--font-size-base);
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        /* Secure badge */
+        .checkout__secure {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: var(--spacing-md);
+            font-size: 0.7rem;
+            color: var(--color-text-muted);
+        }
+
+        /* Back link */
+        .checkout__back {
+            display: block;
+            text-align: center;
+            margin-top: var(--spacing-md);
+            color: var(--color-text-muted);
+            font-size: var(--font-size-xs);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .checkout__back:hover { color: var(--color-blue-light); }
+
+        /* ===== PAYMENT RESULT ===== */
+        .payment-result { display: none; }
+        .payment-result.show { display: block; }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+        }
+        .result-header__icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-sm);
+        }
+        .result-header__title {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            color: var(--color-text-primary);
+        }
+        .result-header__bank {
+            font-size: var(--font-size-sm);
+            color: var(--color-blue-light);
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        /* Amount badge */
+        .result-amount {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            background: rgba(59,130,246,0.08);
+            border: 1px solid rgba(59,130,246,0.2);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-md);
+        }
+        .result-amount__label {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .result-amount__value {
+            font-size: var(--font-size-xl);
+            font-weight: 800;
+            color: var(--color-blue-light);
+        }
+
+        /* VA Box */
+        .va-box {
+            background: var(--color-bg-secondary);
+            border: 1.5px solid var(--color-bg-tertiary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            text-align: center;
+            margin-bottom: var(--spacing-md);
+        }
+        .va-box__label {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+            margin-bottom: var(--spacing-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .va-box__number {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--color-text-primary);
+            letter-spacing: 3px;
+            margin-bottom: var(--spacing-md);
+            word-break: break-all;
+            font-family: 'SF Mono', 'Fira Code', monospace, var(--font-family);
+        }
+        .va-box__copy {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 28px;
+            background: var(--color-blue-primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-full);
+            font-family: var(--font-family);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .va-box__copy:hover {
+            background: var(--color-blue-secondary);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-blue);
+        }
+        .va-box__copy.copied {
+            background: #22c55e;
+        }
+
+        /* QRIS Box */
+        .qris-box {
+            display: none;
+            text-align: center;
+            margin-bottom: var(--spacing-md);
+        }
+        .qris-box__label {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+            margin-bottom: var(--spacing-md);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .qris-box__image {
+            display: block;
+            width: 220px;
+            height: 220px;
+            margin: 0 auto var(--spacing-md);
+            border-radius: var(--radius-lg);
+            background: white;
+            padding: 12px;
+        }
+
+        /* Expiry */
+        .result-expired {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        /* Steps */
+        .result-steps {
+            padding: var(--spacing-md);
+            background: var(--color-bg-secondary);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        .result-steps__item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-sm);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            padding: 8px 0;
+        }
+        .result-steps__item + .result-steps__item {
+            border-top: 1px solid var(--color-bg-tertiary);
+        }
+        .result-steps__num {
+            flex-shrink: 0;
+            width: 22px;
+            height: 22px;
+            background: var(--color-blue-primary);
+            color: white;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.65rem;
+        }
+
+        /* Payment status indicator */
+        .payment-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 16px;
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            font-size: var(--font-size-sm);
+            margin-bottom: 12px;
+            transition: all 0.3s;
+        }
+        .payment-status--waiting {
+            background: rgba(234, 179, 8, 0.12);
+            border: 1px solid rgba(234, 179, 8, 0.4);
+            color: #eab308;
+        }
+        .payment-status--paid {
+            background: rgba(34, 197, 94, 0.12);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            color: #22c55e;
+        }
+        .payment-status__spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(234, 179, 8, 0.3);
+            border-top-color: #eab308;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Done button */
+        .result-done {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            font-weight: 700;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 20px rgba(34, 197, 94, 0.3);
+        }
+        .result-done:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 30px rgba(34, 197, 94, 0.4);
+            color: white;
+        }
+        .result-done--disabled {
+            background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+            cursor: not-allowed;
+            opacity: 0.6;
+            box-shadow: none;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="checkout">
+        <div class="checkout__container">
+            <div class="checkout__header">
+                <h1 class="checkout__title">Checkout</h1>
+                <p class="checkout__subtitle">Lengkapi data untuk melanjutkan pembayaran</p>
+            </div>
+
+            <!-- ORDER SUMMARY -->
+            <div class="checkout__card" id="order-summary">
+                <div class="checkout__urgency">
+                    🔥 SISA <strong>7</strong> SLOT — Harga naik setelah habis
+                </div>
+                <div class="checkout__product">
+                    <div>
+                        <div class="checkout__product-name">AI Arbitrage Blueprint</div>
+                        <div class="checkout__product-batch">Batch 8 — Presale 3</div>
+                    </div>
+                    <div>
+                        <div class="checkout__product-price">Rp 96.000</div>
+                        <div class="checkout__product-save">Hemat Rp 2.9jt+ (96.8%)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FORM CARD -->
+            <div class="checkout__card" id="form-card">
+                <form id="checkout-form" class="checkout__form">
+                    <div class="form-group">
+                        <label class="form-group__label" for="name">Nama Lengkap <span>*</span></label>
+                        <input type="text" id="name" name="name" class="form-group__input"
+                            placeholder="Masukkan nama lengkap lo" required />
+                        <div class="form-error" id="name-error">Nama wajib diisi</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-group__label" for="email">Email <span>*</span></label>
+                        <input type="email" id="email" name="email" class="form-group__input"
+                            placeholder="email@example.com" required />
+                        <div class="form-error" id="email-error">Email tidak valid</div>
+                        <div class="form-group__hint">Untuk akses course dan info penting</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-group__label" for="whatsapp">Nomor WhatsApp <span>*</span></label>
+                        <input type="tel" id="whatsapp" name="whatsapp" class="form-group__input"
+                            placeholder="08xxxxxxxxxx" required />
+                        <div class="form-error" id="whatsapp-error">Nomor WhatsApp wajib diisi</div>
+                        <div class="form-group__hint">Untuk konfirmasi dan masuk group</div>
+                    </div>
+
+                    <div class="form-divider"></div>
+
+                    <!-- Payment Methods -->
+                    <div>
+                        <div class="payment-section__title">Metode Pembayaran <span style="color: var(--color-error);">*</span></div>
+                        <div class="payment-methods" id="payment-methods">
+                            <button type="button" class="payment-method-btn" data-method="va" data-channel="bca">
+                                <img class="payment-method-btn__logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bank_Central_Asia.svg/200px-Bank_Central_Asia.svg.png" alt="BCA" />
+                                <span class="payment-method-btn__name">BCA VA</span>
+                            </button>
+                            <button type="button" class="payment-method-btn" data-method="va" data-channel="mandiri">
+                                <img class="payment-method-btn__logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Bank_Mandiri_logo_2016.svg/200px-Bank_Mandiri_logo_2016.svg.png" alt="Mandiri" />
+                                <span class="payment-method-btn__name">Mandiri VA</span>
+                            </button>
+                            <button type="button" class="payment-method-btn" data-method="va" data-channel="bni">
+                                <span style="font-weight:800;font-size:1.2rem;color:#f60;">BNI</span>
+                                <span class="payment-method-btn__name">BNI VA</span>
+                            </button>
+                            <button type="button" class="payment-method-btn" data-method="va" data-channel="bri">
+                                <img class="payment-method-btn__logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/BANK_BRI_logo.svg/200px-BANK_BRI_logo.svg.png" alt="BRI" />
+                                <span class="payment-method-btn__name">BRI VA</span>
+                            </button>
+                            <button type="button" class="payment-method-btn payment-method-btn--full" data-method="qris" data-channel="qris">
+                                <span style="font-size:1.5rem;">📱</span>
+                                <span class="payment-method-btn__name">QRIS — GoPay, OVO, Dana, ShopeePay</span>
+                            </button>
+                        </div>
+                        <div class="form-error" id="payment-error">Pilih metode pembayaran</div>
+                    </div>
+
+                    <button type="submit" id="pay-button"
+                        class="btn btn--primary btn--large btn--full checkout__submit">
+                        Bayar Sekarang — Rp 96.000
+                    </button>
+                </form>
+
+                <div class="checkout__secure">
+                    🔒 Pembayaran aman & terenkripsi
+                </div>
+            </div>
+
+            <!-- PAYMENT RESULT (hidden until created) -->
+            <div class="checkout__card payment-result" id="payment-result">
+                <div class="result-header">
+                    <div class="result-header__icon">✅</div>
+                    <div class="result-header__title">Segera Selesaikan Pembayaran</div>
+                    <div class="result-header__bank" id="result-bank"></div>
+                </div>
+
+                <div class="result-amount">
+                    <span class="result-amount__label">Total Bayar</span>
+                    <span class="result-amount__value" id="result-amount"></span>
+                </div>
+
+                <!-- VA display -->
+                <div class="va-box" id="va-box">
+                    <div class="va-box__label">Nomor Virtual Account</div>
+                    <div class="va-box__number" id="va-number"></div>
+                    <button class="va-box__copy" id="copy-btn">Salin Nomor</button>
+                </div>
+
+                <!-- QRIS display -->
+                <div class="qris-box" id="qris-box">
+                    <div class="qris-box__label">Scan QR Code di bawah</div>
+                    <img id="qris-image" class="qris-box__image" src="" alt="QRIS Code" />
+                </div>
+
+                <div class="result-expired" id="result-expired"></div>
+
+                <div class="result-steps">
+                    <div class="result-steps__item">
+                        <span class="result-steps__num">1</span>
+                        <span>Salin nomor VA / scan QRIS di atas</span>
+                    </div>
+                    <div class="result-steps__item">
+                        <span class="result-steps__num">2</span>
+                        <span>Buka aplikasi bank / e-wallet dan transfer sesuai nominal</span>
+                    </div>
+                    <div class="result-steps__item">
+                        <span class="result-steps__num">3</span>
+                        <span>Pembayaran diverifikasi otomatis, klik tombol di bawah</span>
+                    </div>
+                </div>
+
+                <div class="payment-status payment-status--waiting" id="payment-status">
+                    <div class="payment-status__spinner"></div>
+                    <span id="payment-status-text">Menunggu pembayaran...</span>
+                </div>
+
+                <a href="#" id="done-btn" class="result-done result-done--disabled" onclick="return false;">
+                    Menunggu konfirmasi pembayaran...
+                </a>
+            </div>
+
+            <a href="/" class="checkout__back">← Kembali ke halaman utama</a>
+        </div>
+    </section>
+
+    <script>
+        // Track checkout event
+        (async function trackCheckout() {
+            try {
+                await fetch('/api/track-event', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ eventType: 'checkout' })
+                });
+            } catch (error) { console.log('Tracking error:', error); }
+        })();
+
+        const form = document.getElementById('checkout-form');
+        const payButton = document.getElementById('pay-button');
+        let selectedMethod = null;
+        let selectedChannel = null;
+
+        // Payment method selection
+        document.querySelectorAll('.payment-method-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.payment-method-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                selectedMethod = btn.dataset.method;
+                selectedChannel = btn.dataset.channel;
+                document.getElementById('payment-error').style.display = 'none';
+            });
+        });
+
+        function isValidEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+        function isValidWhatsApp(phone) { const d = phone.replace(/\D/g, ''); return d.length >= 10 && d.length <= 15; }
+
+        function clearErrors() {
+            document.querySelectorAll('.form-error').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.form-group__input').forEach(el => el.classList.remove('error'));
+        }
+        function showError(inputId, errorId) {
+            document.getElementById(inputId).classList.add('error');
+            document.getElementById(errorId).style.display = 'block';
+        }
+
+        // Copy VA number
+        document.getElementById('copy-btn').addEventListener('click', () => {
+            const vaNum = document.getElementById('va-number').textContent;
+            navigator.clipboard.writeText(vaNum).then(() => {
+                const btn = document.getElementById('copy-btn');
+                btn.textContent = 'Tersalin!';
+                btn.classList.add('copied');
+                setTimeout(() => { btn.textContent = 'Salin Nomor'; btn.classList.remove('copied'); }, 2000);
+            });
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearErrors();
+
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const whatsapp = document.getElementById('whatsapp').value.trim();
+            let hasError = false;
+
+            if (!name) { showError('name', 'name-error'); hasError = true; }
+            if (!email || !isValidEmail(email)) { showError('email', 'email-error'); hasError = true; }
+            if (!whatsapp || !isValidWhatsApp(whatsapp)) { showError('whatsapp', 'whatsapp-error'); hasError = true; }
+            if (!selectedMethod || !selectedChannel) {
+                document.getElementById('payment-error').style.display = 'block';
+                hasError = true;
+            }
+            if (hasError) return;
+
+            fbq('track', 'AddPaymentInfo', {
+                content_name: 'AI Arbitrage Blueprint - Batch 8',
+                content_category: 'Course',
+                value: 96000,
+                currency: 'IDR'
+            }, { eventID: 'API_' + Date.now() });
+
+            payButton.disabled = true;
+            payButton.textContent = 'Memproses...';
+
+            try {
+                const response = await fetch('/api/create-transaction', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        amount: 96000,
+                        product: 'AI Arbitrage Blueprint - Batch 8 Presale 2',
+                        customerName: name,
+                        customerEmail: email,
+                        customerPhone: whatsapp,
+                        paymentMethod: selectedMethod,
+                        paymentChannel: selectedChannel,
+                    }),
+                });
+
+                if (!response.ok) {
+                    const errData = await response.json();
+                    console.error('API error response:', JSON.stringify(errData, null, 2));
+                    const detail = errData.details ? JSON.stringify(errData.details) : '';
+                    throw new Error((errData.error || 'Failed to create transaction') + (detail ? ' | ' + detail : ''));
+                }
+
+                const data = await response.json();
+
+                localStorage.setItem('customerName', name);
+                localStorage.setItem('customerEmail', email);
+                localStorage.setItem('customerWhatsApp', whatsapp);
+                localStorage.setItem('orderId', data.order_id);
+                localStorage.setItem('paymentAmount', '96000');
+
+                // n8n webhook
+                try {
+                    fetch('https://n8n.sixzenith.space/webhook/88ai', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            event: 'payment_initiated',
+                            customer: { name, email, whatsapp },
+                            order: { order_id: data.order_id, transaction_id: data.transaction_id },
+                            payment: { method: selectedMethod, channel: selectedChannel, payment_no: data.payment_no },
+                            product: 'AI Arbitrage Blueprint - Batch 8 Presale 2',
+                            amount: 96000,
+                            timestamp: new Date().toISOString(),
+                        }),
+                    });
+                } catch (e) { console.error('Webhook error:', e); }
+
+                showPaymentResult(data);
+
+            } catch (error) {
+                console.error('Payment error:', error);
+                alert('Terjadi kesalahan: ' + error.message);
+                resetButton();
+            }
+        });
+
+        function showPaymentResult(data) {
+            document.getElementById('form-card').style.display = 'none';
+            document.getElementById('order-summary').style.display = 'none';
+            const resultCard = document.getElementById('payment-result');
+            resultCard.classList.add('show');
+
+            const channelNames = {
+                bca: 'BCA Virtual Account',
+                mandiri: 'Mandiri Virtual Account',
+                bni: 'BNI Virtual Account',
+                bri: 'BRI Virtual Account',
+                qris: 'QRIS',
+            };
+            document.getElementById('result-bank').textContent = channelNames[selectedChannel] || selectedChannel.toUpperCase();
+
+            const total = data.total || 96000;
+            document.getElementById('result-amount').textContent = 'Rp ' + parseInt(total).toLocaleString('id-ID');
+
+            if (selectedMethod === 'qris' && (data.qris_url || data.qr_string)) {
+                document.getElementById('va-box').style.display = 'none';
+                document.getElementById('qris-box').style.display = 'block';
+                if (data.qr_string) {
+                    document.getElementById('qris-image').src = 'https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=' + encodeURIComponent(data.qr_string);
+                } else {
+                    document.getElementById('qris-image').src = data.qris_url;
+                }
+            } else {
+                document.getElementById('va-box').style.display = 'block';
+                document.getElementById('qris-box').style.display = 'none';
+                document.getElementById('va-number').textContent = data.payment_no || '-';
+            }
+
+            if (data.expired) {
+                document.getElementById('result-expired').textContent = '⏱ Bayar sebelum: ' + data.expired;
+            }
+
+            resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            // Start polling payment status
+            startPaymentPolling(data.transaction_id, data.order_id);
+        }
+
+        // Read Meta cookies for CAPI match quality
+        function getCookie(name) {
+            const match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+            return match ? decodeURIComponent(match[1]) : '';
+        }
+
+        let pollingInterval = null;
+
+        function startPaymentPolling(transactionId, orderId) {
+            let attempts = 0;
+            const maxAttempts = 180; // 15 minutes (every 5s)
+
+            // Gather customer data + Meta cookies once for all poll requests
+            const pollPayload = {
+                transactionId,
+                orderId,
+                customerName: localStorage.getItem('customerName') || '',
+                customerEmail: localStorage.getItem('customerEmail') || '',
+                customerPhone: localStorage.getItem('customerWhatsApp') || '',
+                fbc: getCookie('_fbc'),
+                fbp: getCookie('_fbp'),
+            };
+
+            async function checkPayment() {
+                attempts++;
+                try {
+                    const resp = await fetch('/api/check-status', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(pollPayload),
+                    });
+                    const result = await resp.json();
+                    console.log('Poll #' + attempts, 'result:', JSON.stringify(result));
+
+                    if (result.paid) {
+                        clearInterval(pollingInterval);
+                        onPaymentConfirmed(orderId, transactionId);
+                        return;
+                    }
+                } catch (e) {
+                    console.error('Poll error:', e);
+                }
+
+                if (attempts >= maxAttempts) {
+                    clearInterval(pollingInterval);
+                    document.getElementById('payment-status-text').textContent = 'Waktu habis. Refresh halaman jika sudah bayar.';
+                }
+            }
+
+            // Check immediately once, then every 5 seconds
+            checkPayment();
+            pollingInterval = setInterval(checkPayment, 5000);
+        }
+
+        function onPaymentConfirmed(orderId, transactionId) {
+            // Update status indicator
+            const statusEl = document.getElementById('payment-status');
+            statusEl.classList.remove('payment-status--waiting');
+            statusEl.classList.add('payment-status--paid');
+            statusEl.innerHTML = '<span style="font-size:1.2rem">✅</span> <span id="payment-status-text">Pembayaran berhasil diterima!</span>';
+
+            // Enable done button
+            const doneBtn = document.getElementById('done-btn');
+            doneBtn.classList.remove('result-done--disabled');
+            const thankYouUrl = '/thank-you.html?order_id=' + orderId + '&trx_id=' + transactionId;
+            doneBtn.href = thankYouUrl;
+            doneBtn.onclick = null;
+            doneBtn.textContent = 'Mengalihkan ke halaman konfirmasi...';
+
+            // Auto-redirect after 3 seconds
+            setTimeout(function() {
+                window.location.href = thankYouUrl;
+            }, 3000);
+        }
+
+        function resetButton() {
+            payButton.disabled = false;
+            payButton.textContent = 'Bayar Sekarang — Rp 96.000';
+        }
+    </script>
+</body>
+
+</html>

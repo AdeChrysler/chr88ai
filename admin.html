@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard | Purchase Tracking</title>
+    <link rel="stylesheet" href="/src/style.css" />
+    <style>
+        .admin {
+            min-height: 100vh;
+            padding: var(--spacing-2xl);
+        }
+
+        .admin__header {
+            max-width: 1200px;
+            margin: 0 auto var(--spacing-2xl);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin__title {
+            font-size: var(--font-size-3xl);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-blue-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .admin__logout {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            background: var(--color-error);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .login-form {
+            max-width: 400px;
+            margin: 100px auto;
+            background: var(--color-bg-card);
+            padding: var(--spacing-2xl);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--color-bg-tertiary);
+        }
+
+        .login-form__title {
+            text-align: center;
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .login-form__input {
+            width: 100%;
+            padding: var(--spacing-md);
+            background: var(--color-bg-primary);
+            border: 2px solid var(--color-bg-tertiary);
+            border-radius: var(--radius-md);
+            color: var(--color-text-primary);
+            margin-bottom: var(--spacing-md);
+            font-family: var(--font-family);
+        }
+
+        .login-form__button {
+            width: 100%;
+            padding: var(--spacing-md);
+            background: var(--color-blue-primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .login-form__error {
+            color: var(--color-error);
+            font-size: var(--font-size-sm);
+            margin-top: var(--spacing-sm);
+            text-align: center;
+        }
+
+        .stats {
+            max-width: 1200px;
+            margin: 0 auto var(--spacing-2xl);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .stat-card {
+            background: var(--color-bg-card);
+            padding: var(--spacing-xl);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--color-bg-tertiary);
+        }
+
+        .stat-card__label {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .stat-card__value {
+            font-size: var(--font-size-3xl);
+            font-weight: 800;
+            color: var(--color-blue-light);
+        }
+
+        .purchases-table {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--color-bg-card);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--color-bg-tertiary);
+            overflow: hidden;
+        }
+
+        .purchases-table__header {
+            padding: var(--spacing-lg) var(--spacing-xl);
+            border-bottom: 1px solid var(--color-bg-tertiary);
+            font-weight: 700;
+            font-size: var(--font-size-lg);
+        }
+
+        .purchases-table__body {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .purchase-row {
+            padding: var(--spacing-lg) var(--spacing-xl);
+            border-bottom: 1px solid var(--color-bg-tertiary);
+            display: grid;
+            grid-template-columns: 2fr 2fr 1fr 1fr 2fr;
+            gap: var(--spacing-md);
+            align-items: center;
+        }
+
+        .purchase-row:hover {
+            background: var(--color-bg-secondary);
+        }
+
+        .purchase-row__label {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .purchase-row__value {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-primary);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+        }
+
+        .badge--success {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--color-success);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-2xl);
+            color: var(--color-text-muted);
+        }
+
+        #login-view {
+            display: block;
+        }
+
+        #dashboard-view {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Login View -->
+    <div id="login-view">
+        <div class="login-form">
+            <h1 class="login-form__title">🔐 Admin Login</h1>
+            <form id="login-form">
+                <input type="email" id="email" class="login-form__input" placeholder="Email" required />
+                <input type="password" id="password" class="login-form__input" placeholder="Password" required />
+                <button type="submit" class="login-form__button">Login</button>
+                <div id="login-error" class="login-form__error"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard View -->
+    <div id="dashboard-view">
+        <section class="admin">
+            <div class="admin__header">
+                <h1 class="admin__title">📊 Purchase Tracking Dashboard</h1>
+                <button id="logout-btn" class="admin__logout">Logout</button>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-card__label">🔴 Real-time (1 hour)</div>
+                    <div class="stat-card__value" id="stat-rt-visitors">0</div>
+                    <div class="stat-card__label" style="margin-top: 8px; font-size: 11px;">Visitors</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card__label">🔴 Real-time (1 hour)</div>
+                    <div class="stat-card__value" id="stat-rt-checkouts">0</div>
+                    <div class="stat-card__label" style="margin-top: 8px; font-size: 11px;">Checkouts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card__label">🔴 Real-time (1 hour)</div>
+                    <div class="stat-card__value" id="stat-rt-purchases">0</div>
+                    <div class="stat-card__label" style="margin-top: 8px; font-size: 11px;">Purchases</div>
+                </div>
+            </div>
+
+            <!-- 6 Hour Stats -->
+            <div class="stats" style="margin-top: var(--spacing-lg);">
+                <div class="stat-card">
+                    <div class="stat-card__label">Last 6 Hours</div>
+                    <div class="stat-card__value" id="stat-6h-visitors" style="color: var(--color-text-primary);">0
+                    </div>
+                    <div class="stat-card__label" style="margin-top: 8px; font-size: 11px;">Visitors</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card__label">Last 6 Hours</div>
+                    <div class="stat-card__value" id="stat-6h-checkouts" style="color: var(--color-text-primary);">0
+                    </div>
+                    <div class="stat-card__label" style="margin-top: 8px; font-size: 11px;">Checkouts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card__label">Last 6 Hours</div>
+                    <div class="stat-card__value" id="stat-6h-purchases" style="color: var(--color-text-primary);">0
+                    </div>
+                    <div class="stat-card__label" style="margin-top: 8px; font-size: 11px;">Purchases</div>
+                </div>
+            </div>
+
+            <!-- 24 Hour Stats -->
+            <div class="stats" style="margin-top: var(--spacing-lg);">
+                <div class="stat-card">
+                    <div class="stat-card__label">Total Purchases (All Time)</div>
+                    <div class="stat-card__value" id="stat-total">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card__label">Total Revenue (All Time)</div>
+                    <div class="stat-card__value" id="stat-revenue">Rp 0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card__label">Last 24 Hours</div>
+                    <div class="stat-card__value" id="stat-today">0</div>
+                </div>
+            </div>
+
+            <!-- Purchases Table -->
+            <div class="purchases-table">
+                <div class="purchases-table__header">Recent Purchases</div>
+                <div class="purchases-table__body" id="purchases-list"></div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        let authToken = localStorage.getItem('adminToken');
+
+        // Check if already logged in
+        if (authToken) {
+            showDashboard();
+            loadPurchases();
+        }
+
+        // Login form
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorEl = document.getElementById('login-error');
+
+            try {
+                const response = await fetch('/api/auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password }),
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    authToken = result.token;
+                    localStorage.setItem('adminToken', authToken);
+                    showDashboard();
+                    loadPurchases();
+                } else {
+                    errorEl.textContent = 'Invalid credentials';
+                }
+            } catch (error) {
+                errorEl.textContent = 'Login failed. Please try again.';
+            }
+        });
+
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            localStorage.removeItem('adminToken');
+            authToken = null;
+            showLogin();
+        });
+
+        function showDashboard() {
+            document.getElementById('login-view').style.display = 'none';
+            document.getElementById('dashboard-view').style.display = 'block';
+        }
+
+        function showLogin() {
+            document.getElementById('login-view').style.display = 'block';
+            document.getElementById('dashboard-view').style.display = 'none';
+        }
+
+        async function loadPurchases() {
+            try {
+                const response = await fetch('/api/get-purchases', {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        showLogin();
+                        return;
+                    }
+                    throw new Error('Failed to load purchases');
+                }
+
+                const data = await response.json();
+                displayPurchases(data.purchases);
+                updateStats(data.purchases);
+
+                // Also load real-time stats
+                loadRealtimeStats();
+            } catch (error) {
+                console.error('Error loading purchases:', error);
+            }
+        }
+
+        async function loadRealtimeStats() {
+            try {
+                const response = await fetch('/api/get-stats', {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                    },
+                });
+
+                if (!response.ok) return;
+
+                const data = await response.json();
+                if (data.success && data.stats) {
+                    // Real-time (1 hour)
+                    document.getElementById('stat-rt-visitors').textContent = data.stats.realtime.visitors;
+                    document.getElementById('stat-rt-checkouts').textContent = data.stats.realtime.checkouts;
+                    document.getElementById('stat-rt-purchases').textContent = data.stats.realtime.purchases;
+
+                    // 6 hours
+                    document.getElementById('stat-6h-visitors').textContent = data.stats.last6Hours.visitors;
+                    document.getElementById('stat-6h-checkouts').textContent = data.stats.last6Hours.checkouts;
+                    document.getElementById('stat-6h-purchases').textContent = data.stats.last6Hours.purchases;
+                }
+            } catch (error) {
+                console.error('Error loading real-time stats:', error);
+            }
+        }
+
+        function displayPurchases(purchases) {
+            const container = document.getElementById('purchases-list');
+
+            if (!purchases || purchases.length === 0) {
+                container.innerHTML = '<div class="empty-state">No purchases tracked yet</div>';
+                return;
+            }
+
+            container.innerHTML = purchases.map(p => `
+                <div class="purchase-row">
+                    <div>
+                        <div class="purchase-row__label">Customer</div>
+                        <div class="purchase-row__value">${p.customerName}</div>
+                        <div class="purchase-row__value" style="font-size: var(--font-size-xs); color: var(--color-text-muted);">${p.customerEmail}</div>
+                    </div>
+                    <div>
+                        <div class="purchase-row__label">Order ID</div>
+                        <div class="purchase-row__value">${p.orderId}</div>
+                    </div>
+                    <div>
+                        <div class="purchase-row__label">Amount</div>
+                        <div class="purchase-row__value">Rp ${parseInt(p.amount).toLocaleString('id-ID')}</div>
+                    </div>
+                    <div>
+                        <div class="purchase-row__label">Status</div>
+                        <span class="badge badge--success">${p.status}</span>
+                    </div>
+                    <div>
+                        <div class="purchase-row__label">Tracked At</div>
+                        <div class="purchase-row__value">${new Date(p.trackedAt).toLocaleString('id-ID')}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateStats(purchases) {
+            const total = purchases.length;
+            const revenue = purchases.reduce((sum, p) => sum + parseFloat(p.amount), 0);
+
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            const last24h = purchases.filter(p => new Date(p.trackedAt) > yesterday).length;
+
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-revenue').textContent = `Rp ${revenue.toLocaleString('id-ID')}`;
+            document.getElementById('stat-today').textContent = last24h;
+        }
+
+        // Refresh every 30 seconds
+        setInterval(() => {
+            if (authToken) {
+                loadPurchases();
+            }
+        }, 30000);
+    </script>
+</body>
+
+</html>
