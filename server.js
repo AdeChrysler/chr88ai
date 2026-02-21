@@ -42,7 +42,7 @@ app.use('/videos', express.static(path.join(__dirname, 'public', 'videos'), {
 app.use(express.static(path.join(__dirname, 'dist')));
 
 // SPA fallback — serve index.html for unmatched routes
-app.get('*', (req, res) => {
+app.use((req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
