@@ -1,5 +1,6 @@
 // Vercel Serverless Function - Create iPaymu Direct Payment
 import crypto from 'crypto';
+import { sendCAPIEvent } from './_lib/capi.js';
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
@@ -7,7 +8,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { amount, product, customerEmail, customerName, customerPhone, paymentMethod, paymentChannel } = req.body;
+        const { amount, product, customerEmail, customerName, customerPhone, paymentMethod, paymentChannel, fbc, fbp } = req.body;
 
         if (!amount || !product || !paymentMethod || !paymentChannel) {
             return res.status(400).json({ error: 'Amount, product, paymentMethod, and paymentChannel are required' });
@@ -91,6 +92,28 @@ export default async function handler(req, res) {
         }
 
         console.log('iPaymu direct response:', JSON.stringify(data, null, 2));
+
+        // Fire server-side CAPI InitiateCheckout — works even if browser blocks pixel
+        const clientIp = req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || '';
+        const clientUserAgent = req.headers['user-agent'] || '';
+        sendCAPIEvent({
+            eventName: 'InitiateCheckout',
+            eventId: 'IC_' + orderId,
+            sourceUrl: 'https://chr88.zenova.id/checkout.html',
+            customerEmail,
+            customerPhone,
+            customerName,
+            fbc,
+            fbp,
+            clientIp,
+            clientUserAgent,
+            customData: {
+                currency: 'IDR',
+                value: amount,
+                content_name: 'AI Arbitrage Blueprint - Batch 8',
+                content_category: 'Course',
+            },
+        }).catch(err => console.error('CAPI InitiateCheckout error:', err));
 
         // Direct payment returns payment number (VA number, QRIS url, etc.)
         return res.status(200).json({

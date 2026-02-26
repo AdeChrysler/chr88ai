@@ -22,12 +22,6 @@
             'https://connect.facebook.net/en_US/fbevents.js');
         fbq('init', '2075329529696205');
         fbq('track', 'PageView');
-        fbq('track', 'InitiateCheckout', {
-            content_name: 'AI Arbitrage Blueprint - Batch 8',
-            content_category: 'Course',
-            value: 96000,
-            currency: 'IDR'
-        }, { eventID: 'IC_' + Date.now() });
     </script>
     <noscript><img height="1" width="1" style="display:none"
             src="https://www.facebook.com/tr?id=2075329529696205&ev=PageView&noscript=1" /></noscript>
@@ -260,6 +254,92 @@
             font-size: 0.7rem;
             color: var(--color-text-muted);
         }
+
+        /* ===== TIER SELECTION ===== */
+        .tier-section__label {
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+        .tier-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .tier-card {
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 16px;
+            background: var(--color-bg-secondary);
+            border: 1.5px solid var(--color-bg-tertiary);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all 0.2s;
+            overflow: hidden;
+        }
+        .tier-card:hover { border-color: rgba(59,130,246,0.5); }
+        .tier-card.selected {
+            border-color: var(--color-blue-primary);
+            background: rgba(59,130,246,0.07);
+            box-shadow: 0 0 0 1px var(--color-blue-primary);
+        }
+        .tier-card--featured { border-color: rgba(59,130,246,0.35); }
+        .tier-card__badge {
+            position: absolute;
+            top: 0; right: 0;
+            background: var(--color-blue-primary);
+            color: white;
+            font-size: 0.58rem;
+            font-weight: 800;
+            letter-spacing: 0.4px;
+            padding: 3px 8px;
+            border-bottom-left-radius: var(--radius-sm);
+        }
+        .tier-card--elite .tier-card__badge {
+            background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+        }
+        .tier-card__radio {
+            flex-shrink: 0;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--color-bg-tertiary);
+            border-radius: 50%;
+            margin-top: 2px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .tier-card.selected .tier-card__radio { border-color: var(--color-blue-primary); background: var(--color-blue-primary); }
+        .tier-card.selected .tier-card__radio::after { content: ''; width: 6px; height: 6px; background: white; border-radius: 50%; }
+        .tier-card__body { flex: 1; min-width: 0; }
+        .tier-card__top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .tier-card__name { font-weight: 700; font-size: var(--font-size-sm); color: var(--color-text-primary); }
+        .tier-card__price { font-weight: 800; font-size: var(--font-size-sm); color: var(--color-blue-light); white-space: nowrap; }
+        .tier-card__subtitle { font-size: 0.68rem; color: var(--color-text-muted); margin-bottom: 7px; font-style: italic; line-height: 1.4; }
+        .tier-card__features { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 3px; }
+        .tier-card__features li {
+            font-size: 0.71rem;
+            color: var(--color-text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 5px;
+            line-height: 1.4;
+        }
+        .tier-card__features li::before { content: '✓'; color: #22c55e; font-weight: 800; flex-shrink: 0; }
+        .tier-card__features li.muted { color: var(--color-text-muted); opacity: 0.6; }
+        .tier-card__features li.muted::before { color: var(--color-text-muted); }
 
         /* Back link */
         .checkout__back {
@@ -509,20 +589,80 @@
                 <p class="checkout__subtitle">Lengkapi data untuk melanjutkan pembayaran</p>
             </div>
 
-            <!-- ORDER SUMMARY -->
+            <!-- TIER SELECTION -->
             <div class="checkout__card" id="order-summary">
                 <div class="checkout__urgency">
                     🔥 SISA <strong>7</strong> SLOT — Harga naik setelah habis
                 </div>
-                <div class="checkout__product">
-                    <div>
-                        <div class="checkout__product-name">AI Arbitrage Blueprint</div>
-                        <div class="checkout__product-batch">Batch 8 — Presale 3</div>
+                <div class="tier-section__label">Pilih Paket</div>
+                <div class="tier-cards">
+
+                    <!-- TIER 1: CORE -->
+                    <div class="tier-card" id="tier-core"
+                         data-tier="core"
+                         data-amount="96000"
+                         data-name="AI Arbitrage Blueprint - Batch 8 Presale 2"
+                         data-content-name="AI Arbitrage Blueprint - Batch 8">
+                        <div class="tier-card__radio"></div>
+                        <div class="tier-card__body">
+                            <div class="tier-card__top">
+                                <div class="tier-card__name">Paket Core</div>
+                                <div class="tier-card__price">Rp 96.000</div>
+                            </div>
+                            <ul class="tier-card__features">
+                                <li>AI Arbitrage Blueprint — course lengkap Batch 8</li>
+                                <li>Akses grup eksklusif alumni</li>
+                                <li>Sistem cari & eksekusi arbitrase dengan AI</li>
+                            </ul>
+                        </div>
                     </div>
-                    <div>
-                        <div class="checkout__product-price">Rp 96.000</div>
-                        <div class="checkout__product-save">Hemat Rp 2.9jt+ (96.8%)</div>
+
+                    <!-- TIER 2: FAST TRACK (featured) -->
+                    <div class="tier-card tier-card--featured" id="tier-fasttrack"
+                         data-tier="fasttrack"
+                         data-amount="289000"
+                         data-name="AI Arbitrage Blueprint + LinkedIn B2B Fast Track - Batch 8"
+                         data-content-name="AI Arbitrage Blueprint - Batch 8 + Fast Track">
+                        <div class="tier-card__badge">PALING POPULER</div>
+                        <div class="tier-card__radio"></div>
+                        <div class="tier-card__body">
+                            <div class="tier-card__top">
+                                <div class="tier-card__name">Paket Fast Track</div>
+                                <div class="tier-card__price">Rp 289.000</div>
+                            </div>
+                            <div class="tier-card__subtitle">Untuk yang mau langsung eksekusi & dapat klien B2B besar</div>
+                            <ul class="tier-card__features">
+                                <li>Semua di Paket Core</li>
+                                <li>Template sistem siap pakai — tinggal copy-paste</li>
+                                <li>Playbook B2B LinkedIn (masih blue ocean, minim kompetisi)</li>
+                                <li>Checklist & 30-day roadmap dapat klien B2B besar</li>
+                            </ul>
+                        </div>
                     </div>
+
+                    <!-- TIER 3: ELITE -->
+                    <div class="tier-card tier-card--elite" id="tier-elite"
+                         data-tier="elite"
+                         data-amount="489000"
+                         data-name="AI Arbitrage Blueprint + LinkedIn B2B Fast Track + 1-on-1 Coaching - Batch 8"
+                         data-content-name="AI Arbitrage Blueprint - Batch 8 + Elite Coaching">
+                        <div class="tier-card__badge">UNTUK YANG SERIUS</div>
+                        <div class="tier-card__radio"></div>
+                        <div class="tier-card__body">
+                            <div class="tier-card__top">
+                                <div class="tier-card__name">Paket Elite</div>
+                                <div class="tier-card__price">Rp 489.000</div>
+                            </div>
+                            <div class="tier-card__subtitle">Sudah struggle, stuck di teknikal, mau guided sampai land klien pertama</div>
+                            <ul class="tier-card__features">
+                                <li>Semua di Paket Fast Track</li>
+                                <li>3x sesi 1-on-1 coaching call personal</li>
+                                <li>Personal guidance sampai klien pertama landing</li>
+                                <li>Target: klien pertama dalam 30 hari atau kurang</li>
+                            </ul>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -586,6 +726,7 @@
                         class="btn btn--primary btn--large btn--full checkout__submit">
                         Bayar Sekarang — Rp 96.000
                     </button>
+                    <div id="tier-summary" style="text-align:center;font-size:0.7rem;color:var(--color-text-muted);margin-top:6px;">Paket Core dipilih</div>
                 </form>
 
                 <div class="checkout__secure">
@@ -667,6 +808,40 @@
         let selectedMethod = null;
         let selectedChannel = null;
 
+        // ===== TIER SELECTION =====
+        let selectedTierAmount = 96000;
+        let selectedTierName = 'AI Arbitrage Blueprint - Batch 8 Presale 2';
+        let selectedTierContentName = 'AI Arbitrage Blueprint - Batch 8';
+        let selectedTierLabel = 'Paket Core';
+
+        function formatIDR(n) { return 'Rp ' + n.toLocaleString('id-ID'); }
+
+        function selectTier(card) {
+            document.querySelectorAll('.tier-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            selectedTierAmount = parseInt(card.dataset.amount);
+            selectedTierName = card.dataset.name;
+            selectedTierContentName = card.dataset.contentName;
+            selectedTierLabel = card.querySelector('.tier-card__name').textContent;
+            payButton.textContent = 'Bayar Sekarang — ' + formatIDR(selectedTierAmount);
+            document.getElementById('tier-summary').textContent = selectedTierLabel + ' dipilih';
+
+            // Fire InitiateCheckout pixel with actual selected tier value
+            fbq('track', 'InitiateCheckout', {
+                content_name: selectedTierContentName,
+                content_category: 'Course',
+                value: selectedTierAmount,
+                currency: 'IDR'
+            }, { eventID: 'IC_' + card.dataset.tier + '_' + Date.now() });
+        }
+
+        document.querySelectorAll('.tier-card').forEach(card => {
+            card.addEventListener('click', () => selectTier(card));
+        });
+
+        // Auto-select Core (Tier 1) on load and fire InitiateCheckout
+        selectTier(document.getElementById('tier-core'));
+
         // Payment method selection
         document.querySelectorAll('.payment-method-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -720,9 +895,9 @@
             if (hasError) return;
 
             fbq('track', 'AddPaymentInfo', {
-                content_name: 'AI Arbitrage Blueprint - Batch 8',
+                content_name: selectedTierContentName,
                 content_category: 'Course',
-                value: 96000,
+                value: selectedTierAmount,
                 currency: 'IDR'
             }, { eventID: 'API_' + Date.now() });
 
@@ -734,13 +909,15 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        amount: 96000,
-                        product: 'AI Arbitrage Blueprint - Batch 8 Presale 2',
+                        amount: selectedTierAmount,
+                        product: selectedTierName,
                         customerName: name,
                         customerEmail: email,
                         customerPhone: whatsapp,
                         paymentMethod: selectedMethod,
                         paymentChannel: selectedChannel,
+                        fbc: getCookie('_fbc'),
+                        fbp: getCookie('_fbp'),
                     }),
                 });
 
@@ -757,7 +934,9 @@
                 localStorage.setItem('customerEmail', email);
                 localStorage.setItem('customerWhatsApp', whatsapp);
                 localStorage.setItem('orderId', data.order_id);
-                localStorage.setItem('paymentAmount', '96000');
+                localStorage.setItem('paymentAmount', selectedTierAmount.toString());
+                localStorage.setItem('paymentTierLabel', selectedTierLabel);
+                localStorage.setItem('paymentContentName', selectedTierContentName);
 
                 // n8n webhook
                 try {
@@ -769,8 +948,9 @@
                             customer: { name, email, whatsapp },
                             order: { order_id: data.order_id, transaction_id: data.transaction_id },
                             payment: { method: selectedMethod, channel: selectedChannel, payment_no: data.payment_no },
-                            product: 'AI Arbitrage Blueprint - Batch 8 Presale 2',
-                            amount: 96000,
+                            product: selectedTierName,
+                            tier: selectedTierLabel,
+                            amount: selectedTierAmount,
                             timestamp: new Date().toISOString(),
                         }),
                     });
@@ -800,7 +980,7 @@
             };
             document.getElementById('result-bank').textContent = channelNames[selectedChannel] || selectedChannel.toUpperCase();
 
-            const total = data.total || 96000;
+            const total = data.total || selectedTierAmount;
             document.getElementById('result-amount').textContent = 'Rp ' + parseInt(total).toLocaleString('id-ID');
 
             if (selectedMethod === 'qris' && (data.qris_url || data.qr_string)) {

@@ -257,6 +257,8 @@
         const customerWhatsApp = localStorage.getItem('customerWhatsApp') || '';
         const orderId = urlParams.get('order_id') || localStorage.getItem('orderId') || '';
         const trxId = urlParams.get('trx_id') || '';
+        const paymentAmount = parseInt(localStorage.getItem('paymentAmount') || '96000');
+        const paymentContentName = localStorage.getItem('paymentContentName') || 'AI Arbitrage Blueprint - Batch 8';
 
         // Display greeting
         const greetingEl = document.getElementById('customer-greeting');
@@ -285,8 +287,15 @@ Mohon bantu untuk akses ke grup dan materi selanjutnya. Terima kasih! 🙏`;
 
         document.getElementById('whatsapp-btn').href = whatsappUrl;
 
-        // Purchase tracking is now handled server-side by check-status.js (primary)
-        // and ipaymu-webhook.js (backup). This page is display-only.
+        // Fire client-side Purchase pixel — eventID = orderId deduplicates with server CAPI
+        if (orderId) {
+            fbq('track', 'Purchase', {
+                content_name: paymentContentName,
+                content_category: 'Course',
+                value: paymentAmount,
+                currency: 'IDR'
+            }, { eventID: orderId });
+        }
 
         // Send n8n webhook for payment success confirmation
         if (orderId) {
@@ -305,8 +314,8 @@ Mohon bantu untuk akses ke grup dan materi selanjutnya. Terima kasih! 🙏`;
                             order_id: orderId,
                             transaction_id: trxId,
                         },
-                        product: 'AI Arbitrage Blueprint - Batch 8 Presale 2',
-                        amount: 96000,
+                        product: paymentContentName,
+                        amount: paymentAmount,
                         timestamp: new Date().toISOString(),
                     }),
                 });
