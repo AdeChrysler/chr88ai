@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Dashboard | Purchase Tracking</title>
+    <title>Admin Dashboard | Chr88 AI</title>
     <link rel="stylesheet" href="/src/style.css" />
     <style>
         .admin {
@@ -14,7 +14,7 @@
 
         .admin__header {
             max-width: 1200px;
-            margin: 0 auto var(--spacing-2xl);
+            margin: 0 auto var(--spacing-lg);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -83,6 +83,46 @@
             text-align: center;
         }
 
+        /* ===== TABS ===== */
+        .tabs {
+            max-width: 1200px;
+            margin: 0 auto var(--spacing-xl);
+            display: flex;
+            gap: var(--spacing-xs);
+            border-bottom: 2px solid var(--color-bg-tertiary);
+        }
+
+        .tab-btn {
+            padding: var(--spacing-md) var(--spacing-xl);
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: var(--color-text-muted);
+            font-weight: 600;
+            font-size: var(--font-size-sm);
+            cursor: pointer;
+            margin-bottom: -2px;
+            font-family: var(--font-family);
+        }
+
+        .tab-btn:hover {
+            color: var(--color-text-primary);
+        }
+
+        .tab-btn.active {
+            color: var(--color-blue-light);
+            border-bottom-color: var(--color-blue-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ===== STATS ===== */
         .stats {
             max-width: 1200px;
             margin: 0 auto var(--spacing-2xl);
@@ -110,7 +150,8 @@
             color: var(--color-blue-light);
         }
 
-        .purchases-table {
+        /* ===== TABLE ===== */
+        .data-table {
             max-width: 1200px;
             margin: 0 auto;
             background: var(--color-bg-card);
@@ -119,14 +160,17 @@
             overflow: hidden;
         }
 
-        .purchases-table__header {
+        .data-table__header {
             padding: var(--spacing-lg) var(--spacing-xl);
             border-bottom: 1px solid var(--color-bg-tertiary);
             font-weight: 700;
             font-size: var(--font-size-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .purchases-table__body {
+        .data-table__body {
             max-height: 600px;
             overflow-y: auto;
         }
@@ -168,6 +212,26 @@
             color: var(--color-success);
         }
 
+        .badge--core {
+            background: rgba(148, 163, 184, 0.2);
+            color: #94a3b8;
+        }
+
+        .badge--fasttrack {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+        }
+
+        .badge--elite {
+            background: rgba(168, 85, 247, 0.2);
+            color: #c084fc;
+        }
+
+        .badge--inactive {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+        }
+
         .empty-state {
             text-align: center;
             padding: var(--spacing-2xl);
@@ -181,6 +245,198 @@
         #dashboard-view {
             display: none;
         }
+
+        /* ===== MEMBERS ===== */
+        .member-row {
+            padding: var(--spacing-md) var(--spacing-xl);
+            border-bottom: 1px solid var(--color-bg-tertiary);
+            display: grid;
+            grid-template-columns: 2fr 1.5fr 1fr 1fr 120px;
+            gap: var(--spacing-md);
+            align-items: center;
+        }
+
+        .member-row:hover {
+            background: var(--color-bg-secondary);
+        }
+
+        .toolbar {
+            max-width: 1200px;
+            margin: 0 auto var(--spacing-lg);
+            display: flex;
+            gap: var(--spacing-md);
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .toolbar__search {
+            flex: 1;
+            min-width: 200px;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--color-bg-card);
+            border: 2px solid var(--color-bg-tertiary);
+            border-radius: var(--radius-md);
+            color: var(--color-text-primary);
+            font-family: var(--font-family);
+        }
+
+        .toolbar__filter {
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--color-bg-card);
+            border: 2px solid var(--color-bg-tertiary);
+            border-radius: var(--radius-md);
+            color: var(--color-text-primary);
+            font-family: var(--font-family);
+        }
+
+        .btn {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+            font-family: var(--font-family);
+        }
+
+        .btn--primary {
+            background: var(--color-blue-primary);
+            color: white;
+        }
+
+        .btn--secondary {
+            background: var(--color-bg-tertiary);
+            color: var(--color-text-primary);
+        }
+
+        .btn--sm {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            font-size: var(--font-size-xs);
+        }
+
+        .btn--danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--color-bg-card);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--color-bg-tertiary);
+            padding: var(--spacing-2xl);
+            width: 90%;
+            max-width: 550px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal__title {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .form-group label {
+            display: block;
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+            margin-bottom: var(--spacing-xs);
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--color-bg-primary);
+            border: 2px solid var(--color-bg-tertiary);
+            border-radius: var(--radius-md);
+            color: var(--color-text-primary);
+            font-family: var(--font-family);
+            font-size: var(--font-size-sm);
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .modal__actions {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: flex-end;
+            margin-top: var(--spacing-xl);
+        }
+
+        /* ===== BULK IMPORT ===== */
+        .bulk-info {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+            margin-bottom: var(--spacing-sm);
+            line-height: 1.5;
+        }
+
+        .bulk-textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: var(--spacing-md);
+            background: var(--color-bg-primary);
+            border: 2px solid var(--color-bg-tertiary);
+            border-radius: var(--radius-md);
+            color: var(--color-text-primary);
+            font-family: monospace;
+            font-size: var(--font-size-xs);
+            resize: vertical;
+        }
+
+        .import-result {
+            margin-top: var(--spacing-md);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+            display: none;
+        }
+
+        .import-result--success {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--color-success);
+        }
+
+        .import-result--error {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+        }
+
+        @media (max-width: 768px) {
+            .member-row {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-sm);
+            }
+
+            .purchase-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
     </style>
 </head>
 
@@ -188,7 +444,7 @@
     <!-- Login View -->
     <div id="login-view">
         <div class="login-form">
-            <h1 class="login-form__title">🔐 Admin Login</h1>
+            <h1 class="login-form__title">Admin Login</h1>
             <form id="login-form">
                 <input type="email" id="email" class="login-form__input" placeholder="Email" required />
                 <input type="password" id="password" class="login-form__input" placeholder="Password" required />
@@ -202,85 +458,203 @@
     <div id="dashboard-view">
         <section class="admin">
             <div class="admin__header">
-                <h1 class="admin__title">📊 Purchase Tracking Dashboard</h1>
+                <h1 class="admin__title">Admin Dashboard</h1>
                 <button id="logout-btn" class="admin__logout">Logout</button>
             </div>
 
-            <!-- Stats -->
-            <div class="stats">
-                <div class="stat-card">
-                    <div class="stat-card__label">🔴 Real-time (1 hour)</div>
-                    <div class="stat-card__value" id="stat-rt-visitors">0</div>
-                    <div class="stat-card__label" style="margin-top: 8px; font-size: 11px;">Visitors</div>
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="purchases">Purchases</button>
+                <button class="tab-btn" data-tab="members">Members</button>
+            </div>
+
+            <!-- ==================== PURCHASES TAB ==================== -->
+            <div class="tab-content active" id="tab-purchases">
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-card__label">Real-time (1 hour)</div>
+                        <div class="stat-card__value" id="stat-rt-visitors">0</div>
+                        <div class="stat-card__label" style="margin-top: 8px; font-size: 11px;">Visitors</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card__label">Real-time (1 hour)</div>
+                        <div class="stat-card__value" id="stat-rt-checkouts">0</div>
+                        <div class="stat-card__label" style="margin-top: 8px; font-size: 11px;">Checkouts</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card__label">Real-time (1 hour)</div>
+                        <div class="stat-card__value" id="stat-rt-purchases">0</div>
+                        <div class="stat-card__label" style="margin-top: 8px; font-size: 11px;">Purchases</div>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-card__label">🔴 Real-time (1 hour)</div>
-                    <div class="stat-card__value" id="stat-rt-checkouts">0</div>
-                    <div class="stat-card__label" style="margin-top: 8px; font-size: 11px;">Checkouts</div>
+
+                <div class="stats" style="margin-top: var(--spacing-lg);">
+                    <div class="stat-card">
+                        <div class="stat-card__label">Last 6 Hours</div>
+                        <div class="stat-card__value" id="stat-6h-visitors" style="color: var(--color-text-primary);">0</div>
+                        <div class="stat-card__label" style="margin-top: 8px; font-size: 11px;">Visitors</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card__label">Last 6 Hours</div>
+                        <div class="stat-card__value" id="stat-6h-checkouts" style="color: var(--color-text-primary);">0</div>
+                        <div class="stat-card__label" style="margin-top: 8px; font-size: 11px;">Checkouts</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card__label">Last 6 Hours</div>
+                        <div class="stat-card__value" id="stat-6h-purchases" style="color: var(--color-text-primary);">0</div>
+                        <div class="stat-card__label" style="margin-top: 8px; font-size: 11px;">Purchases</div>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-card__label">🔴 Real-time (1 hour)</div>
-                    <div class="stat-card__value" id="stat-rt-purchases">0</div>
-                    <div class="stat-card__label" style="margin-top: 8px; font-size: 11px;">Purchases</div>
+
+                <div class="stats" style="margin-top: var(--spacing-lg);">
+                    <div class="stat-card">
+                        <div class="stat-card__label">Total Purchases (All Time)</div>
+                        <div class="stat-card__value" id="stat-total">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card__label">Total Revenue (All Time)</div>
+                        <div class="stat-card__value" id="stat-revenue">Rp 0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card__label">Last 24 Hours</div>
+                        <div class="stat-card__value" id="stat-today">0</div>
+                    </div>
+                </div>
+
+                <div class="data-table">
+                    <div class="data-table__header">Recent Purchases</div>
+                    <div class="data-table__body" id="purchases-list"></div>
                 </div>
             </div>
 
-            <!-- 6 Hour Stats -->
-            <div class="stats" style="margin-top: var(--spacing-lg);">
-                <div class="stat-card">
-                    <div class="stat-card__label">Last 6 Hours</div>
-                    <div class="stat-card__value" id="stat-6h-visitors" style="color: var(--color-text-primary);">0
+            <!-- ==================== MEMBERS TAB ==================== -->
+            <div class="tab-content" id="tab-members">
+                <!-- Member Stats -->
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-card__label">Total Members</div>
+                        <div class="stat-card__value" id="stat-members-total">0</div>
                     </div>
-                    <div class="stat-card__label" style="margin-top: 8px; font-size: 11px;">Visitors</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card__label">Last 6 Hours</div>
-                    <div class="stat-card__value" id="stat-6h-checkouts" style="color: var(--color-text-primary);">0
+                    <div class="stat-card">
+                        <div class="stat-card__label">Core</div>
+                        <div class="stat-card__value" id="stat-members-core" style="color: #94a3b8;">0</div>
                     </div>
-                    <div class="stat-card__label" style="margin-top: 8px; font-size: 11px;">Checkouts</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card__label">Last 6 Hours</div>
-                    <div class="stat-card__value" id="stat-6h-purchases" style="color: var(--color-text-primary);">0
+                    <div class="stat-card">
+                        <div class="stat-card__label">Fast Track</div>
+                        <div class="stat-card__value" id="stat-members-fasttrack" style="color: #60a5fa;">0</div>
                     </div>
-                    <div class="stat-card__label" style="margin-top: 8px; font-size: 11px;">Purchases</div>
+                    <div class="stat-card">
+                        <div class="stat-card__label">Elite</div>
+                        <div class="stat-card__value" id="stat-members-elite" style="color: #c084fc;">0</div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- 24 Hour Stats -->
-            <div class="stats" style="margin-top: var(--spacing-lg);">
-                <div class="stat-card">
-                    <div class="stat-card__label">Total Purchases (All Time)</div>
-                    <div class="stat-card__value" id="stat-total">0</div>
+                <!-- Toolbar -->
+                <div class="toolbar">
+                    <input type="text" class="toolbar__search" id="member-search" placeholder="Search name or email..." />
+                    <select class="toolbar__filter" id="member-filter-tier">
+                        <option value="">All Tiers</option>
+                        <option value="core">Core</option>
+                        <option value="fasttrack">Fast Track</option>
+                        <option value="elite">Elite</option>
+                    </select>
+                    <select class="toolbar__filter" id="member-filter-status">
+                        <option value="">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                    <button class="btn btn--primary" onclick="openAddMemberModal()">+ Add Member</button>
+                    <button class="btn btn--secondary" onclick="openBulkImportModal()">Bulk Import</button>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-card__label">Total Revenue (All Time)</div>
-                    <div class="stat-card__value" id="stat-revenue">Rp 0</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card__label">Last 24 Hours</div>
-                    <div class="stat-card__value" id="stat-today">0</div>
-                </div>
-            </div>
 
-            <!-- Purchases Table -->
-            <div class="purchases-table">
-                <div class="purchases-table__header">Recent Purchases</div>
-                <div class="purchases-table__body" id="purchases-list"></div>
+                <!-- Members Table -->
+                <div class="data-table">
+                    <div class="data-table__header">
+                        <span>Members (<span id="members-shown-count">0</span>)</span>
+                    </div>
+                    <div class="data-table__body" id="members-list"></div>
+                </div>
             </div>
         </section>
     </div>
 
+    <!-- ===== ADD/EDIT MEMBER MODAL ===== -->
+    <div class="modal-overlay" id="member-modal">
+        <div class="modal">
+            <h2 class="modal__title" id="modal-title">Add Member</h2>
+            <input type="hidden" id="modal-member-id" />
+            <div class="form-group">
+                <label>Name *</label>
+                <input type="text" id="modal-name" placeholder="Full name" />
+            </div>
+            <div class="form-group">
+                <label>Email *</label>
+                <input type="email" id="modal-email" placeholder="email@example.com" />
+            </div>
+            <div class="form-group">
+                <label>Phone</label>
+                <input type="text" id="modal-phone" placeholder="08xxxxxxxxxx" />
+            </div>
+            <div class="form-group">
+                <label>Tier</label>
+                <select id="modal-tier">
+                    <option value="core">Core (Rp 96.000)</option>
+                    <option value="fasttrack">Fast Track (Rp 289.000)</option>
+                    <option value="elite">Elite (Rp 489.000)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Status</label>
+                <select id="modal-status">
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Notes</label>
+                <textarea id="modal-notes" placeholder="Optional notes..."></textarea>
+            </div>
+            <div class="modal__actions">
+                <button class="btn btn--secondary" onclick="closeModal('member-modal')">Cancel</button>
+                <button class="btn btn--primary" id="modal-save-btn" onclick="saveMember()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== BULK IMPORT MODAL ===== -->
+    <div class="modal-overlay" id="bulk-modal">
+        <div class="modal">
+            <h2 class="modal__title">Bulk Import Members</h2>
+            <div class="bulk-info">
+                Paste CSV data below. Format per line:<br>
+                <strong>name, email, phone, tier</strong><br>
+                Tier options: <code>core</code>, <code>fasttrack</code>, <code>elite</code><br>
+                Phone and tier are optional (defaults: no phone, core tier).
+            </div>
+            <textarea class="bulk-textarea" id="bulk-csv" placeholder="Budi Santoso, budi@email.com, 081234567890, fasttrack
+Ani Wijaya, ani@email.com, , core
+Dian Putri, dian@email.com, 087654321098, elite"></textarea>
+            <div class="import-result" id="import-result"></div>
+            <div class="modal__actions">
+                <button class="btn btn--secondary" onclick="closeModal('bulk-modal')">Cancel</button>
+                <button class="btn btn--primary" onclick="bulkImport()">Import</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let authToken = localStorage.getItem('adminToken');
+        let allMembers = [];
 
-        // Check if already logged in
+        const TIER_LABELS = { core: 'Core', fasttrack: 'Fast Track', elite: 'Elite' };
+        const TIER_BADGE = { core: 'badge--core', fasttrack: 'badge--fasttrack', elite: 'badge--elite' };
+
+        // ===== AUTH =====
         if (authToken) {
             showDashboard();
             loadPurchases();
         }
 
-        // Login form
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
@@ -293,9 +667,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password }),
                 });
-
                 const result = await response.json();
-
                 if (result.success) {
                     authToken = result.token;
                     localStorage.setItem('adminToken', authToken);
@@ -309,7 +681,6 @@
             }
         });
 
-        // Logout
         document.getElementById('logout-btn').addEventListener('click', () => {
             localStorage.removeItem('adminToken');
             authToken = null;
@@ -326,27 +697,33 @@
             document.getElementById('dashboard-view').style.display = 'none';
         }
 
+        // ===== TABS =====
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+
+                if (btn.dataset.tab === 'members' && allMembers.length === 0) {
+                    loadMembers();
+                }
+            });
+        });
+
+        // ===== PURCHASES =====
         async function loadPurchases() {
             try {
                 const response = await fetch('/api/get-purchases', {
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`,
-                    },
+                    headers: { 'Authorization': `Bearer ${authToken}` },
                 });
-
                 if (!response.ok) {
-                    if (response.status === 401) {
-                        showLogin();
-                        return;
-                    }
-                    throw new Error('Failed to load purchases');
+                    if (response.status === 401) { showLogin(); return; }
+                    throw new Error('Failed');
                 }
-
                 const data = await response.json();
                 displayPurchases(data.purchases);
                 updateStats(data.purchases);
-
-                // Also load real-time stats
                 loadRealtimeStats();
             } catch (error) {
                 console.error('Error loading purchases:', error);
@@ -356,21 +733,14 @@
         async function loadRealtimeStats() {
             try {
                 const response = await fetch('/api/get-stats', {
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`,
-                    },
+                    headers: { 'Authorization': `Bearer ${authToken}` },
                 });
-
                 if (!response.ok) return;
-
                 const data = await response.json();
                 if (data.success && data.stats) {
-                    // Real-time (1 hour)
                     document.getElementById('stat-rt-visitors').textContent = data.stats.realtime.visitors;
                     document.getElementById('stat-rt-checkouts').textContent = data.stats.realtime.checkouts;
                     document.getElementById('stat-rt-purchases').textContent = data.stats.realtime.purchases;
-
-                    // 6 hours
                     document.getElementById('stat-6h-visitors').textContent = data.stats.last6Hours.visitors;
                     document.getElementById('stat-6h-checkouts').textContent = data.stats.last6Hours.checkouts;
                     document.getElementById('stat-6h-purchases').textContent = data.stats.last6Hours.purchases;
@@ -382,22 +752,20 @@
 
         function displayPurchases(purchases) {
             const container = document.getElementById('purchases-list');
-
             if (!purchases || purchases.length === 0) {
                 container.innerHTML = '<div class="empty-state">No purchases tracked yet</div>';
                 return;
             }
-
             container.innerHTML = purchases.map(p => `
                 <div class="purchase-row">
                     <div>
                         <div class="purchase-row__label">Customer</div>
-                        <div class="purchase-row__value">${p.customerName}</div>
-                        <div class="purchase-row__value" style="font-size: var(--font-size-xs); color: var(--color-text-muted);">${p.customerEmail}</div>
+                        <div class="purchase-row__value">${esc(p.customerName)}</div>
+                        <div class="purchase-row__value" style="font-size: var(--font-size-xs); color: var(--color-text-muted);">${esc(p.customerEmail)}</div>
                     </div>
                     <div>
                         <div class="purchase-row__label">Order ID</div>
-                        <div class="purchase-row__value">${p.orderId}</div>
+                        <div class="purchase-row__value">${esc(p.orderId)}</div>
                     </div>
                     <div>
                         <div class="purchase-row__label">Amount</div>
@@ -405,7 +773,7 @@
                     </div>
                     <div>
                         <div class="purchase-row__label">Status</div>
-                        <span class="badge badge--success">${p.status}</span>
+                        <span class="badge badge--success">${esc(p.status)}</span>
                     </div>
                     <div>
                         <div class="purchase-row__label">Tracked At</div>
@@ -418,22 +786,260 @@
         function updateStats(purchases) {
             const total = purchases.length;
             const revenue = purchases.reduce((sum, p) => sum + parseFloat(p.amount), 0);
-
             const yesterday = new Date();
             yesterday.setDate(yesterday.getDate() - 1);
             const last24h = purchases.filter(p => new Date(p.trackedAt) > yesterday).length;
-
             document.getElementById('stat-total').textContent = total;
             document.getElementById('stat-revenue').textContent = `Rp ${revenue.toLocaleString('id-ID')}`;
             document.getElementById('stat-today').textContent = last24h;
         }
 
-        // Refresh every 30 seconds
-        setInterval(() => {
-            if (authToken) {
-                loadPurchases();
+        setInterval(() => { if (authToken) loadPurchases(); }, 30000);
+
+        // ===== MEMBERS =====
+        async function loadMembers() {
+            try {
+                const response = await fetch('/api/members', {
+                    headers: { 'Authorization': `Bearer ${authToken}` },
+                });
+                if (!response.ok) {
+                    if (response.status === 401) { showLogin(); return; }
+                    throw new Error('Failed');
+                }
+                const data = await response.json();
+                allMembers = data.members || [];
+                renderMembers();
+                updateMemberStats();
+            } catch (error) {
+                console.error('Error loading members:', error);
             }
-        }, 30000);
+        }
+
+        function updateMemberStats() {
+            const active = allMembers.filter(m => m.status === 'active');
+            document.getElementById('stat-members-total').textContent = active.length;
+            document.getElementById('stat-members-core').textContent = active.filter(m => m.tier === 'core').length;
+            document.getElementById('stat-members-fasttrack').textContent = active.filter(m => m.tier === 'fasttrack').length;
+            document.getElementById('stat-members-elite').textContent = active.filter(m => m.tier === 'elite').length;
+        }
+
+        function getFilteredMembers() {
+            const search = document.getElementById('member-search').value.toLowerCase();
+            const tierFilter = document.getElementById('member-filter-tier').value;
+            const statusFilter = document.getElementById('member-filter-status').value;
+
+            return allMembers.filter(m => {
+                if (search && !m.name.toLowerCase().includes(search) && !m.email.toLowerCase().includes(search)) return false;
+                if (tierFilter && m.tier !== tierFilter) return false;
+                if (statusFilter && m.status !== statusFilter) return false;
+                return true;
+            });
+        }
+
+        function renderMembers() {
+            const filtered = getFilteredMembers();
+            const container = document.getElementById('members-list');
+            document.getElementById('members-shown-count').textContent = filtered.length;
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="empty-state">No members found</div>';
+                return;
+            }
+
+            container.innerHTML = filtered.map(m => `
+                <div class="member-row">
+                    <div>
+                        <div class="purchase-row__value" style="font-weight: 600;">${esc(m.name)}</div>
+                        <div style="font-size: var(--font-size-xs); color: var(--color-text-muted);">${esc(m.email)}</div>
+                        ${m.phone ? `<div style="font-size: var(--font-size-xs); color: var(--color-text-muted);">${esc(m.phone)}</div>` : ''}
+                    </div>
+                    <div>
+                        <span class="badge ${TIER_BADGE[m.tier] || 'badge--core'}">${TIER_LABELS[m.tier] || m.tier}</span>
+                    </div>
+                    <div>
+                        <span class="badge ${m.status === 'active' ? 'badge--success' : 'badge--inactive'}">${m.status}</span>
+                    </div>
+                    <div style="font-size: var(--font-size-xs); color: var(--color-text-muted);">
+                        ${m.notes ? esc(m.notes).substring(0, 40) : '-'}
+                    </div>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="btn btn--secondary btn--sm" onclick="openEditMemberModal('${m.id}')">Edit</button>
+                        <button class="btn btn--danger btn--sm" onclick="deleteMember('${m.id}', '${esc(m.name)}')">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Search & filter listeners
+        document.getElementById('member-search').addEventListener('input', renderMembers);
+        document.getElementById('member-filter-tier').addEventListener('change', renderMembers);
+        document.getElementById('member-filter-status').addEventListener('change', renderMembers);
+
+        // ===== MODAL =====
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('open');
+        }
+
+        function openAddMemberModal() {
+            document.getElementById('modal-title').textContent = 'Add Member';
+            document.getElementById('modal-member-id').value = '';
+            document.getElementById('modal-name').value = '';
+            document.getElementById('modal-email').value = '';
+            document.getElementById('modal-phone').value = '';
+            document.getElementById('modal-tier').value = 'core';
+            document.getElementById('modal-status').value = 'active';
+            document.getElementById('modal-notes').value = '';
+            document.getElementById('member-modal').classList.add('open');
+        }
+
+        function openEditMemberModal(id) {
+            const m = allMembers.find(x => x.id === id);
+            if (!m) return;
+            document.getElementById('modal-title').textContent = 'Edit Member';
+            document.getElementById('modal-member-id').value = m.id;
+            document.getElementById('modal-name').value = m.name;
+            document.getElementById('modal-email').value = m.email;
+            document.getElementById('modal-phone').value = m.phone || '';
+            document.getElementById('modal-tier').value = m.tier;
+            document.getElementById('modal-status').value = m.status;
+            document.getElementById('modal-notes').value = m.notes || '';
+            document.getElementById('member-modal').classList.add('open');
+        }
+
+        async function saveMember() {
+            const id = document.getElementById('modal-member-id').value;
+            const payload = {
+                name: document.getElementById('modal-name').value.trim(),
+                email: document.getElementById('modal-email').value.trim(),
+                phone: document.getElementById('modal-phone').value.trim(),
+                tier: document.getElementById('modal-tier').value,
+                status: document.getElementById('modal-status').value,
+                notes: document.getElementById('modal-notes').value.trim(),
+            };
+
+            if (!payload.name || !payload.email) {
+                alert('Name and email are required.');
+                return;
+            }
+
+            try {
+                const isEdit = !!id;
+                const response = await fetch('/api/members', {
+                    method: isEdit ? 'PUT' : 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`,
+                    },
+                    body: JSON.stringify(isEdit ? { id, ...payload } : payload),
+                });
+
+                if (!response.ok) throw new Error('Failed to save');
+
+                closeModal('member-modal');
+                await loadMembers();
+            } catch (error) {
+                alert('Error saving member: ' + error.message);
+            }
+        }
+
+        async function deleteMember(id, name) {
+            if (!confirm(`Delete member "${name}"?`)) return;
+
+            try {
+                const response = await fetch('/api/members', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`,
+                    },
+                    body: JSON.stringify({ id }),
+                });
+                if (!response.ok) throw new Error('Failed');
+                await loadMembers();
+            } catch (error) {
+                alert('Error deleting member: ' + error.message);
+            }
+        }
+
+        // ===== BULK IMPORT =====
+        function openBulkImportModal() {
+            document.getElementById('bulk-csv').value = '';
+            document.getElementById('import-result').style.display = 'none';
+            document.getElementById('bulk-modal').classList.add('open');
+        }
+
+        async function bulkImport() {
+            const csv = document.getElementById('bulk-csv').value.trim();
+            const resultEl = document.getElementById('import-result');
+
+            if (!csv) {
+                resultEl.textContent = 'Paste CSV data first.';
+                resultEl.className = 'import-result import-result--error';
+                resultEl.style.display = 'block';
+                return;
+            }
+
+            const lines = csv.split('\n').filter(l => l.trim());
+            const members = [];
+
+            for (const line of lines) {
+                const parts = line.split(',').map(s => s.trim());
+                if (parts.length < 2) continue;
+
+                const [name, email, phone, tier] = parts;
+                if (!name || !email) continue;
+
+                const validTiers = ['core', 'fasttrack', 'elite'];
+                members.push({
+                    name,
+                    email,
+                    phone: phone || '',
+                    tier: validTiers.includes((tier || '').toLowerCase()) ? tier.toLowerCase() : 'core',
+                    source: 'bulk-import',
+                });
+            }
+
+            if (members.length === 0) {
+                resultEl.textContent = 'No valid rows found. Check format: name, email, phone, tier';
+                resultEl.className = 'import-result import-result--error';
+                resultEl.style.display = 'block';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/members', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`,
+                    },
+                    body: JSON.stringify({ members }),
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    resultEl.textContent = `Successfully imported ${data.added} members!`;
+                    resultEl.className = 'import-result import-result--success';
+                    resultEl.style.display = 'block';
+                    document.getElementById('bulk-csv').value = '';
+                    await loadMembers();
+                } else {
+                    throw new Error(data.error || 'Import failed');
+                }
+            } catch (error) {
+                resultEl.textContent = 'Error: ' + error.message;
+                resultEl.className = 'import-result import-result--error';
+                resultEl.style.display = 'block';
+            }
+        }
+
+        // ===== HELPERS =====
+        function esc(str) {
+            const el = document.createElement('span');
+            el.textContent = str || '';
+            return el.innerHTML;
+        }
     </script>
 </body>
 
