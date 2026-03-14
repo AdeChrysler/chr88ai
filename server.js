@@ -13,7 +13,6 @@ import getStats from './api/get-stats.js';
 import getPurchases from './api/get-purchases.js';
 import auth from './api/auth.js';
 import testWebhook from './api/test-webhook.js';
-import members from './api/members.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,7 +34,6 @@ app.all('/api/get-stats', getStats);
 app.all('/api/get-purchases', getPurchases);
 app.all('/api/auth', auth);
 app.all('/api/test-webhook', testWebhook);
-app.all('/api/members', members);
 
 // Self-hosted video files (long cache, CORS)
 app.use('/videos', express.static(path.join(__dirname, 'public', 'videos'), {
