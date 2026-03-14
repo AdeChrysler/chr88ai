@@ -9,6 +9,9 @@
     content="Blueprint langkah demi langkah untuk dapat Rp 12 juta/bulan dari AI. 2-3 jam sehari, tanpa ganggu kerjaan utama. 482+ alumni sudah buktiin." />
   <link rel="stylesheet" href="/src/style.css" />
 
+  <!-- Preload hero banner for faster LCP -->
+  <link rel="preload" href="/images/hero_banner.webp" as="image" type="image/webp" />
+
   <!-- Meta Pixel Code -->
   <script>
     !function (f, b, e, v, n, t, s) {
@@ -70,6 +73,13 @@
             style="text-align: center; font-size: var(--font-size-xs); color: var(--color-text-muted); margin-top: var(--spacing-sm);">
             👆 Ini baru INTRO — bayangin isi lengkapnya!
           </p>
+          <!-- Video Completion CTA Prompt -->
+          <div id="video-cta-prompt" class="video-cta-prompt" aria-hidden="true">
+            <span class="video-cta-prompt__text">Siap mulai? 🔥</span>
+            <button class="btn btn--primary btn--video-cta" onclick="window.location.href='/checkout.html'">
+              UNLOCK Blueprint Sekarang
+            </button>
+          </div>
         </div>
 
         <p class="subheadline">
@@ -104,7 +114,7 @@
         <!-- Countdown Timer -->
         <div class="countdown-container">
           <div class="countdown-label">⏰ Harga naik dalam:</div>
-          <div class="countdown-timer" id="countdown-timer">
+          <div class="countdown-timer" id="countdown-timer" role="timer" aria-label="Countdown timer sampai harga naik">
             <div class="countdown-unit">
               <span class="countdown-number" id="countdown-hours">00</span>
               <span class="countdown-text">Jam</span>
@@ -119,6 +129,10 @@
               <span class="countdown-number" id="countdown-seconds">00</span>
               <span class="countdown-text">Detik</span>
             </div>
+          </div>
+          <!-- Countdown Expired Message -->
+          <div id="countdown-expired" class="countdown-expired" style="display: none;">
+            ⚠️ Waktu habis! Harga bisa naik kapan saja
           </div>
         </div>
 
@@ -148,15 +162,15 @@
       <!-- Big Stats -->
       <div class="big-stats">
         <div class="big-stat">
-          <span class="big-stat__number">Rp 4 Miliar+</span>
+          <span class="big-stat__number" data-count-to="4" data-count-prefix="Rp " data-count-suffix=" Miliar+">Rp 4 Miliar+</span>
           <span class="big-stat__label">Total dihasilkan alumni</span>
         </div>
         <div class="big-stat">
-          <span class="big-stat__number">480+</span>
+          <span class="big-stat__number" data-count-to="480" data-count-prefix="" data-count-suffix="+">480+</span>
           <span class="big-stat__label">Alumni aktif</span>
         </div>
         <div class="big-stat">
-          <span class="big-stat__number">90%+</span>
+          <span class="big-stat__number" data-count-to="90" data-count-prefix="" data-count-suffix="%+">90%+</span>
           <span class="big-stat__label">Success rate</span>
         </div>
       </div>
@@ -434,9 +448,10 @@
     <div class="container">
       <h2 class="headline" style="text-align: center;">Dari 482 Alumni, Ini Hasilnya</h2>
 
-      <div class="testimonials-grid" style="margin-top: var(--spacing-2xl);">
-        <!-- Testimonial 1 -->
-        <div class="testimonial-card">
+      <div class="carousel" data-carousel style="margin-top: var(--spacing-2xl);">
+        <div class="carousel__track testimonials-grid">
+          <!-- Testimonial 1 -->
+          <div class="testimonial-card carousel__slide">
           <div class="testimonial-card__header">
             <img src="/images/testimonials/testimonial_andri_1767540939133.webp" alt="Andri S."
               class="testimonial-card__avatar-img" loading="lazy">
@@ -454,10 +469,10 @@
           </div>
         </div>
 
-        <!-- Testimonial 2 -->
-        <div class="testimonial-card">
-          <div class="testimonial-card__header">
-            <img src="/images/testimonials/testimonial_sinta_1767540956770.webp" alt="Sinta W."
+          <!-- Testimonial 2 -->
+          <div class="testimonial-card carousel__slide">
+            <div class="testimonial-card__header">
+              <img src="/images/testimonials/testimonial_sinta_1767540956770.webp" alt="Sinta W."
               class="testimonial-card__avatar-img" loading="lazy">
             <div class="testimonial-card__info">
               <div class="testimonial-card__name">Sinta W., 38</div>
@@ -474,7 +489,7 @@
         </div>
 
         <!-- Testimonial 3 -->
-        <div class="testimonial-card">
+        <div class="testimonial-card carousel__slide">
           <div class="testimonial-card__header">
             <img src="/images/testimonials/testimonial_raka_1767540971781.webp" alt="Raka M."
               class="testimonial-card__avatar-img" loading="lazy">
@@ -493,7 +508,7 @@
         </div>
 
         <!-- Testimonial 4 -->
-        <div class="testimonial-card">
+        <div class="testimonial-card carousel__slide">
           <div class="testimonial-card__header">
             <img src="/images/testimonials/testimonial_dimas_1767541028667.webp" alt="Dimas P."
               class="testimonial-card__avatar-img" loading="lazy">
@@ -512,7 +527,7 @@
         </div>
 
         <!-- Testimonial 5 -->
-        <div class="testimonial-card">
+        <div class="testimonial-card carousel__slide">
           <div class="testimonial-card__header">
             <img src="/images/testimonials/testimonial_hendra_1767541045290.webp" alt="Hendra K."
               class="testimonial-card__avatar-img" loading="lazy">
@@ -529,6 +544,8 @@
             💰 Rp 8.7 juta/bulan (side income)
           </div>
         </div>
+        </div>
+        <div class="carousel__dots"></div>
       </div>
     </div>
   </section>
@@ -546,13 +563,22 @@
       </p>
 
       <!-- Member Results -->
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-md);">
-        <img src="/images/testimonials/wa_testimonial_1.png" alt="Screenshot testimoni member - closing client pertama"
-          loading="lazy" style="width: 100%; border-radius: var(--radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
-        <img src="/images/testimonials/wa_testimonial_2.png" alt="Screenshot testimoni member - income bulanan"
-          loading="lazy" style="width: 100%; border-radius: var(--radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
-        <img src="/images/testimonials/wa_testimonial_3.png" alt="Screenshot testimoni member - ROI dari blueprint"
-          loading="lazy" style="width: 100%; border-radius: var(--radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+      <div class="carousel" data-carousel>
+        <div class="carousel__track screenshot-grid">
+          <div class="carousel__slide screenshot-slide">
+            <img src="/images/testimonials/wa_testimonial_1.png" alt="Screenshot testimoni member - closing client pertama"
+              loading="lazy" style="width: 100%; border-radius: var(--radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+          </div>
+          <div class="carousel__slide screenshot-slide">
+            <img src="/images/testimonials/wa_testimonial_2.png" alt="Screenshot testimoni member - income bulanan"
+              loading="lazy" style="width: 100%; border-radius: var(--radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+          </div>
+          <div class="carousel__slide screenshot-slide">
+            <img src="/images/testimonials/wa_testimonial_3.png" alt="Screenshot testimoni member - ROI dari blueprint"
+              loading="lazy" style="width: 100%; border-radius: var(--radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+          </div>
+        </div>
+        <div class="carousel__dots"></div>
       </div>
 
       <!-- Client Payment Proof -->
@@ -560,13 +586,22 @@
         💰 Bukti Client Bayar Member Kami
       </h3>
 
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-md);">
-        <img src="/images/testimonials/ss_payment_1.png" alt="Screenshot bukti pembayaran client via Mandiri"
-          loading="lazy" style="width: 100%; border-radius: var(--radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
-        <img src="/images/testimonials/ss_payment_2.png" alt="Screenshot bukti pembayaran client via GoPay"
-          loading="lazy" style="width: 100%; border-radius: var(--radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
-        <img src="/images/testimonials/ss_payment_3.png" alt="Screenshot bukti pembayaran client via BCA"
-          loading="lazy" style="width: 100%; border-radius: var(--radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+      <div class="carousel" data-carousel>
+        <div class="carousel__track screenshot-grid">
+          <div class="carousel__slide screenshot-slide">
+            <img src="/images/testimonials/ss_payment_1.png" alt="Screenshot bukti pembayaran client via Mandiri"
+              loading="lazy" style="width: 100%; border-radius: var(--radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+          </div>
+          <div class="carousel__slide screenshot-slide">
+            <img src="/images/testimonials/ss_payment_2.png" alt="Screenshot bukti pembayaran client via GoPay"
+              loading="lazy" style="width: 100%; border-radius: var(--radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+          </div>
+          <div class="carousel__slide screenshot-slide">
+            <img src="/images/testimonials/ss_payment_3.png" alt="Screenshot bukti pembayaran client via BCA"
+              loading="lazy" style="width: 100%; border-radius: var(--radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+          </div>
+        </div>
+        <div class="carousel__dots"></div>
       </div>
     </div>
   </section>
@@ -1143,9 +1178,9 @@
 
       <div class="faq-list" style="margin-top: var(--spacing-2xl);">
         <div class="faq-item">
-          <button class="faq-item__question">
+          <button class="faq-item__question" aria-expanded="false">
             <span>Gw udah pernah ikut course lain tapi gagal. Bedanya apa?</span>
-            <span class="faq-item__icon">▼</span>
+            <span class="faq-item__icon" aria-hidden="true">▼</span>
           </button>
           <div class="faq-item__answer">
             <div class="faq-item__answer-content">
@@ -1158,9 +1193,9 @@
         </div>
 
         <div class="faq-item">
-          <button class="faq-item__question">
+          <button class="faq-item__question" aria-expanded="false">
             <span>Gw nggak punya network buat jualan. Gimana dong?</span>
-            <span class="faq-item__icon">▼</span>
+            <span class="faq-item__icon" aria-hidden="true">▼</span>
           </button>
           <div class="faq-item__answer">
             <div class="faq-item__answer-content">
@@ -1172,9 +1207,9 @@
         </div>
 
         <div class="faq-item">
-          <button class="faq-item__question">
+          <button class="faq-item__question" aria-expanded="false">
             <span>Setelah bayar, step pertama gw ngapain?</span>
-            <span class="faq-item__icon">▼</span>
+            <span class="faq-item__icon" aria-hidden="true">▼</span>
           </button>
           <div class="faq-item__answer">
             <div class="faq-item__answer-content">
@@ -1187,9 +1222,9 @@
         </div>
 
         <div class="faq-item">
-          <button class="faq-item__question">
+          <button class="faq-item__question" aria-expanded="false">
             <span>Beneran ada garansi 7 hari?</span>
-            <span class="faq-item__icon">▼</span>
+            <span class="faq-item__icon" aria-hidden="true">▼</span>
           </button>
           <div class="faq-item__answer">
             <div class="faq-item__answer-content">
@@ -1201,9 +1236,9 @@
         </div>
 
         <div class="faq-item">
-          <button class="faq-item__question">
+          <button class="faq-item__question" aria-expanded="false">
             <span>Rp 10-15 juta/bulan itu realistis? Atau cuma marketing?</span>
-            <span class="faq-item__icon">▼</span>
+            <span class="faq-item__icon" aria-hidden="true">▼</span>
           </button>
           <div class="faq-item__answer">
             <div class="faq-item__answer-content">
@@ -1215,9 +1250,9 @@
         </div>
 
         <div class="faq-item">
-          <button class="faq-item__question">
+          <button class="faq-item__question" aria-expanded="false">
             <span>Kenapa murah banget? Ada catch-nya nggak?</span>
-            <span class="faq-item__icon">▼</span>
+            <span class="faq-item__icon" aria-hidden="true">▼</span>
           </button>
           <div class="faq-item__answer">
             <div class="faq-item__answer-content">
@@ -1229,9 +1264,9 @@
         </div>
 
         <div class="faq-item">
-          <button class="faq-item__question">
+          <button class="faq-item__question" aria-expanded="false">
             <span>Gw masih kerja full-time. Bisa jalan?</span>
-            <span class="faq-item__icon">▼</span>
+            <span class="faq-item__icon" aria-hidden="true">▼</span>
           </button>
           <div class="faq-item__answer">
             <div class="faq-item__answer-content">
@@ -1242,9 +1277,9 @@
         </div>
 
         <div class="faq-item">
-          <button class="faq-item__question">
+          <button class="faq-item__question" aria-expanded="false">
             <span>Gw buta teknologi. Bisa nggak?</span>
-            <span class="faq-item__icon">▼</span>
+            <span class="faq-item__icon" aria-hidden="true">▼</span>
           </button>
           <div class="faq-item__answer">
             <div class="faq-item__answer-content">
@@ -1357,16 +1392,25 @@
     </div>
   </section>
 
-  <!-- ==================== STICKY CTA (Mobile) ==================== -->
-  <div class="sticky-cta">
-    <div class="sticky-cta__price">
-      <s>Rp 3jt</s> <strong>Rp 96.000</strong> <span style="font-size: 0.75rem; color: var(--color-text-muted);">(<span
-          id="slot-mobile">7</span> slot left)</span>
+  <!-- ==================== STICKY CTA BAR (Mobile) ==================== -->
+  <div class="sticky-cta" id="sticky-cta-bar">
+    <div class="sticky-cta__left">
+      <span class="sticky-cta__price"><strong>Rp 96.000</strong></span>
+      <span class="sticky-cta__slots">Sisa <span id="slot-mobile">7</span> slot</span>
     </div>
-    <button id="cta-sticky" class="btn btn--primary btn--full">
-      🔥 UNLOCK Blueprint Sekarang
+    <button id="cta-sticky" class="btn btn--primary sticky-cta__btn animate-glow">
+      Unlock Sekarang
     </button>
   </div>
+
+  <!-- ==================== WHATSAPP FLOATING BUTTON ==================== -->
+  <a href="https://wa.me/6285175085774?text=Halo%2C%20saya%20mau%20tanya%20tentang%20AI%20Arbitrage%20Blueprint"
+    class="wa-float" id="wa-float-btn" target="_blank" rel="noopener noreferrer" aria-label="Chat via WhatsApp">
+    <svg class="wa-float__icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16.004 2.002C8.27 2.002 2.004 8.268 2.004 15.998c0 2.494.66 4.924 1.913 7.064L2 30l7.115-1.866A13.94 13.94 0 0 0 16.004 30c7.73 0 13.996-6.268 13.996-13.998S23.734 2.002 16.004 2.002Zm0 25.596a11.55 11.55 0 0 1-5.895-1.618l-.422-.25-4.378 1.148 1.168-4.27-.276-.438a11.52 11.52 0 0 1-1.769-6.172c0-6.384 5.196-11.578 11.58-11.578 6.382 0 11.576 5.194 11.576 11.578 0 6.386-5.2 11.6-11.584 11.6Zm6.348-8.672c-.348-.174-2.06-1.016-2.38-1.132-.32-.118-.552-.174-.786.174-.232.348-.902 1.132-1.106 1.366-.204.232-.408.26-.756.088-.348-.174-1.47-.542-2.8-1.728-1.034-.922-1.732-2.062-1.936-2.41-.204-.348-.022-.536.154-.71.158-.156.348-.408.522-.612.174-.204.232-.348.348-.58.118-.232.06-.436-.028-.61-.088-.174-.786-1.894-1.076-2.594-.284-.68-.572-.588-.786-.598l-.67-.012c-.232 0-.61.088-.928.436-.32.348-1.218 1.19-1.218 2.902 0 1.712 1.248 3.368 1.422 3.6.174.232 2.454 3.748 5.948 5.254.832.358 1.482.572 1.988.732.836.266 1.596.228 2.198.138.67-.1 2.06-.842 2.35-1.656.29-.814.29-1.512.204-1.656-.088-.146-.32-.232-.67-.408Z" fill="white"/>
+    </svg>
+    <span class="wa-float__tooltip">Chat via WhatsApp</span>
+  </a>
 
   <script>
     // Track visitor event on page load
@@ -1382,6 +1426,34 @@
       }
     })();
   </script>
+
+  <!-- ==================== SOCIAL PROOF TOAST ==================== -->
+  <div id="social-proof-toast" class="social-toast" aria-live="polite" aria-atomic="true">
+    <div class="social-toast__avatar" id="toast-avatar"></div>
+    <div class="social-toast__content">
+      <p class="social-toast__text" id="toast-text"></p>
+      <span class="social-toast__verified">&#10003; Verified</span>
+    </div>
+    <button class="social-toast__close" id="toast-close" aria-label="Tutup notifikasi">&times;</button>
+  </div>
+
+  <!-- ==================== EXIT-INTENT POPUP ==================== -->
+  <div id="exit-intent-overlay" class="exit-overlay" role="dialog" aria-modal="true" aria-labelledby="exit-heading">
+    <div class="exit-modal">
+      <button class="exit-modal__close" id="exit-close" aria-label="Tutup popup">&times;</button>
+      <div class="exit-modal__icon">&#x1F6D1;</div>
+      <h2 class="exit-modal__heading" id="exit-heading">Tunggu!</h2>
+      <p class="exit-modal__subtext">Harga <strong>Rp 96K</strong> cuma berlaku <strong>HARI INI</strong></p>
+      <div class="exit-modal__countdown">
+        <span>Berakhir dalam</span>
+        <div class="exit-modal__timer">
+          <span id="exit-countdown-hours">00</span>:<span id="exit-countdown-minutes">00</span>:<span id="exit-countdown-seconds">00</span>
+        </div>
+      </div>
+      <a href="/checkout.html" class="btn btn--primary btn--full exit-modal__cta">&#x1F525; UNLOCK SEKARANG</a>
+      <button class="exit-modal__dismiss" id="exit-dismiss">Nggak, makasih</button>
+    </div>
+  </div>
 
   <script src="/src/main.js" type="module"></script>
 </body>

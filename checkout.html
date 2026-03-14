@@ -28,13 +28,35 @@
     <!-- End Meta Pixel Code -->
 
     <style>
+        /* ===== TOP PROGRESS BAR (loading) ===== */
+        .top-progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-blue-primary), var(--color-blue-light));
+            z-index: 9999;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px var(--color-blue-glow);
+        }
+        .top-progress-bar.active {
+            animation: progressIndeterminate 2s ease-in-out infinite;
+        }
+        @keyframes progressIndeterminate {
+            0% { width: 0; left: 0; }
+            50% { width: 60%; left: 20%; }
+            100% { width: 0; left: 100%; }
+        }
+
+        /* ===== CHECKOUT LAYOUT ===== */
         .checkout {
             min-height: 100vh;
             display: flex;
             align-items: flex-start;
             justify-content: center;
             padding: var(--spacing-lg) var(--spacing-md);
-            padding-top: var(--spacing-2xl);
+            padding-top: var(--spacing-xl);
         }
 
         .checkout__container {
@@ -42,10 +64,48 @@
             max-width: 460px;
         }
 
+        /* Desktop sidebar layout */
+        @media (min-width: 900px) {
+            .checkout__container {
+                max-width: 920px;
+                display: grid;
+                grid-template-columns: 1fr 340px;
+                grid-template-rows: auto auto 1fr auto;
+                gap: 0 var(--spacing-lg);
+            }
+            .checkout__header {
+                grid-column: 1 / -1;
+            }
+            .checkout__stepper {
+                grid-column: 1 / -1;
+            }
+            /* Order summary in sidebar */
+            #order-summary {
+                grid-column: 2;
+                grid-row: 3 / 5;
+                position: sticky;
+                top: var(--spacing-lg);
+                align-self: start;
+                height: fit-content;
+            }
+            /* Form in main column */
+            #form-card {
+                grid-column: 1;
+                grid-row: 3;
+            }
+            .checkout__back {
+                grid-column: 1 / -1;
+            }
+            /* Payment result spans full width */
+            #payment-result {
+                grid-column: 1 / -1;
+            }
+        }
+
         /* Header */
         .checkout__header {
             text-align: center;
-            margin-bottom: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
         }
         .checkout__title {
             font-size: var(--font-size-2xl);
@@ -59,6 +119,97 @@
         .checkout__subtitle {
             color: var(--color-text-muted);
             font-size: var(--font-size-sm);
+        }
+
+        /* ===== PROGRESS STEPPER ===== */
+        .checkout__stepper {
+            margin-bottom: var(--spacing-lg);
+        }
+        .stepper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            position: relative;
+            padding: 0 var(--spacing-sm);
+        }
+        .stepper__step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            flex: 0 0 auto;
+        }
+        .stepper__circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-sm);
+            font-weight: 700;
+            border: 2px solid var(--color-bg-tertiary);
+            background: var(--color-bg-secondary);
+            color: var(--color-text-muted);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .stepper__circle svg {
+            width: 16px;
+            height: 16px;
+            display: none;
+        }
+        .stepper__label {
+            margin-top: 6px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            text-align: center;
+            transition: color 0.3s ease;
+            white-space: nowrap;
+        }
+        .stepper__line {
+            flex: 1;
+            height: 2px;
+            background: var(--color-bg-tertiary);
+            min-width: 40px;
+            max-width: 80px;
+            margin: 0 6px;
+            margin-bottom: 22px;
+            transition: background 0.3s ease;
+            border-radius: 1px;
+        }
+
+        /* Active step */
+        .stepper__step.active .stepper__circle {
+            border-color: var(--color-blue-primary);
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--color-blue-light);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+        .stepper__step.active .stepper__label {
+            color: var(--color-blue-light);
+        }
+
+        /* Completed step */
+        .stepper__step.completed .stepper__circle {
+            border-color: var(--color-blue-primary);
+            background: var(--color-blue-primary);
+            color: white;
+        }
+        .stepper__step.completed .stepper__circle svg {
+            display: block;
+        }
+        .stepper__step.completed .stepper__circle .stepper__num {
+            display: none;
+        }
+        .stepper__step.completed .stepper__label {
+            color: var(--color-blue-light);
+        }
+        .stepper__line.completed {
+            background: var(--color-blue-primary);
         }
 
         /* Cards */
@@ -94,7 +245,7 @@
         }
         .checkout__product-save {
             font-size: 0.65rem;
-            color: var(--color-success);
+            color: #22c55e;
             text-align: right;
             margin-top: 2px;
             opacity: 0.8;
@@ -116,16 +267,112 @@
             color: var(--color-blue-light);
         }
 
+        /* ===== ORDER SUMMARY BREAKDOWN ===== */
+        .order-breakdown {
+            margin-top: var(--spacing-md);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--color-bg-tertiary);
+        }
+        .order-breakdown__row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            font-size: var(--font-size-sm);
+        }
+        .order-breakdown__label {
+            color: var(--color-text-secondary);
+        }
+        .order-breakdown__value {
+            font-weight: 700;
+            color: var(--color-text-primary);
+        }
+        .order-breakdown__row--total {
+            border-top: 1px solid var(--color-bg-tertiary);
+            margin-top: 6px;
+            padding-top: 10px;
+        }
+        .order-breakdown__row--total .order-breakdown__label {
+            font-weight: 700;
+            color: var(--color-text-primary);
+        }
+        .order-breakdown__row--total .order-breakdown__value {
+            font-size: var(--font-size-lg);
+            color: var(--color-blue-light);
+        }
+        .order-breakdown__savings {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: rgba(34, 197, 94, 0.08);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: var(--radius-md);
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #22c55e;
+        }
+        .order-breakdown__savings.hidden { display: none; }
+
+        /* ===== TRUST BADGES ===== */
+        .trust-badges {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: var(--spacing-md);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--color-bg-tertiary);
+        }
+        .trust-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.72rem;
+            color: var(--color-text-muted);
+        }
+        .trust-badge__icon {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(59, 130, 246, 0.08);
+            border-radius: var(--radius-md);
+        }
+        .trust-badge__icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--color-blue-light);
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
         /* Form */
         .checkout__form {
             display: flex;
             flex-direction: column;
             gap: var(--spacing-md);
         }
+
+        /* Section title inside form card */
+        .form-section-title {
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
         .form-group {
             display: flex;
             flex-direction: column;
             gap: 6px;
+            position: relative;
         }
         .form-group__label {
             font-size: var(--font-size-xs);
@@ -135,9 +382,13 @@
             letter-spacing: 0.5px;
         }
         .form-group__label span { color: var(--color-error); }
+        .form-group__input-wrap {
+            position: relative;
+        }
         .form-group__input {
             width: 100%;
             padding: 12px 16px;
+            padding-right: 40px;
             background: var(--color-bg-secondary);
             border: 1.5px solid var(--color-bg-tertiary);
             border-radius: var(--radius-md);
@@ -152,7 +403,39 @@
             box-shadow: 0 0 0 3px var(--color-blue-glow);
         }
         .form-group__input::placeholder { color: var(--color-text-muted); }
-        .form-group__input.error { border-color: var(--color-error); }
+
+        /* Valid state */
+        .form-group__input.valid {
+            border-color: #22c55e;
+        }
+        .form-group__input.valid:focus {
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+        }
+
+        /* Error state */
+        .form-group__input.error {
+            border-color: var(--color-error);
+        }
+        .form-group__input.error:focus {
+            box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.15);
+        }
+
+        /* Inline status icon */
+        .form-group__status {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            display: none;
+        }
+        .form-group__status svg {
+            width: 20px;
+            height: 20px;
+        }
+        .form-group__status.show { display: flex; }
+
         .form-group__hint {
             font-size: 0.7rem;
             color: var(--color-text-muted);
@@ -161,6 +444,19 @@
             color: var(--color-error);
             font-size: var(--font-size-xs);
             display: none;
+            align-items: center;
+            gap: 4px;
+        }
+        .form-error.show { display: flex; }
+
+        /* Shake animation */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+            20%, 40%, 60%, 80% { transform: translateX(4px); }
+        }
+        .shake {
+            animation: shake 0.5s ease;
         }
 
         /* Divider */
@@ -170,7 +466,7 @@
             margin: var(--spacing-sm) 0;
         }
 
-        /* Payment method picker */
+        /* ===== PAYMENT METHOD PICKER (enhanced) ===== */
         .payment-section__title {
             font-size: var(--font-size-xs);
             font-weight: 600;
@@ -189,60 +485,121 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            padding: 14px 8px;
+            gap: 8px;
+            padding: 16px 8px 12px;
             background: var(--color-bg-secondary);
             border: 1.5px solid var(--color-bg-tertiary);
-            border-radius: var(--radius-md);
+            border-radius: var(--radius-lg);
             color: var(--color-text-primary);
             font-family: var(--font-family);
             font-size: var(--font-size-sm);
             cursor: pointer;
             transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
         }
         .payment-method-btn:hover {
-            border-color: var(--color-blue-primary);
-            background: rgba(59, 130, 246, 0.05);
+            border-color: rgba(59, 130, 246, 0.4);
+            background: rgba(59, 130, 246, 0.03);
         }
         .payment-method-btn.selected {
             border-color: var(--color-blue-primary);
-            background: rgba(59, 130, 246, 0.1);
+            background: rgba(59, 130, 246, 0.08);
             box-shadow: 0 0 0 1px var(--color-blue-primary);
         }
-        .payment-method-btn__logo {
-            height: 24px;
-            width: auto;
-            max-width: 80px;
-            object-fit: contain;
+        .payment-method-btn__icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.05);
         }
-        .payment-method-btn__logo--qris {
-            height: 28px;
+        .payment-method-btn__icon svg {
+            width: 24px;
+            height: 24px;
         }
         .payment-method-btn__name {
-            font-weight: 600;
-            font-size: 0.75rem;
+            font-weight: 700;
+            font-size: 0.78rem;
+            text-align: center;
+            line-height: 1.3;
+            color: var(--color-text-primary);
+        }
+        .payment-method-btn__desc {
+            font-size: 0.62rem;
+            color: var(--color-text-muted);
             text-align: center;
             line-height: 1.3;
         }
+
+        /* Selected checkmark */
+        .payment-method-btn__check {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--color-blue-primary);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .payment-method-btn__check svg {
+            width: 10px;
+            height: 10px;
+            stroke: white;
+            stroke-width: 3;
+            fill: none;
+        }
+        .payment-method-btn.selected .payment-method-btn__check {
+            display: flex;
+        }
+
         /* QRIS spans full width */
         .payment-method-btn--full {
             grid-column: 1 / -1;
             flex-direction: row;
-            gap: var(--spacing-sm);
-            padding: 12px 16px;
+            gap: var(--spacing-md);
+            padding: 14px 16px;
+        }
+        .payment-method-btn--full .payment-method-btn__text {
+            text-align: left;
         }
         .payment-method-btn--full .payment-method-btn__name {
             font-size: var(--font-size-sm);
+            text-align: left;
+        }
+        .payment-method-btn--full .payment-method-btn__desc {
+            text-align: left;
         }
 
-        /* Submit */
+        /* ===== SUBMIT BUTTON ===== */
         .checkout__submit {
             margin-top: var(--spacing-sm);
             padding: 16px;
             font-size: var(--font-size-base);
             font-weight: 700;
             letter-spacing: 0.3px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
+        .checkout__submit .btn-spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        .checkout__submit.loading .btn-spinner { display: block; }
+        .checkout__submit.loading { opacity: 0.85; cursor: not-allowed; }
 
         /* Secure badge */
         .checkout__secure {
@@ -337,7 +694,7 @@
             gap: 5px;
             line-height: 1.4;
         }
-        .tier-card__features li::before { content: '✓'; color: #22c55e; font-weight: 800; flex-shrink: 0; }
+        .tier-card__features li::before { content: '\2713'; color: #22c55e; font-weight: 800; flex-shrink: 0; }
         .tier-card__features li.muted { color: var(--color-text-muted); opacity: 0.6; }
         .tier-card__features li.muted::before { color: var(--color-text-muted); }
 
@@ -356,6 +713,65 @@
         /* ===== PAYMENT RESULT ===== */
         .payment-result { display: none; }
         .payment-result.show { display: block; }
+
+        /* Skeleton loading */
+        .skeleton-container { display: none; }
+        .skeleton-container.show { display: block; }
+        .skeleton {
+            background: linear-gradient(90deg, var(--color-bg-secondary) 25%, var(--color-bg-tertiary) 50%, var(--color-bg-secondary) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: var(--radius-md);
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .skeleton--circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 0 auto var(--spacing-sm);
+        }
+        .skeleton--title {
+            height: 20px;
+            width: 70%;
+            margin: 0 auto var(--spacing-sm);
+        }
+        .skeleton--subtitle {
+            height: 14px;
+            width: 50%;
+            margin: 0 auto var(--spacing-md);
+        }
+        .skeleton--bar {
+            height: 52px;
+            width: 100%;
+            margin-bottom: var(--spacing-md);
+        }
+        .skeleton--box {
+            height: 140px;
+            width: 100%;
+            margin-bottom: var(--spacing-md);
+        }
+        .skeleton--text {
+            height: 12px;
+            width: 40%;
+            margin: 0 auto var(--spacing-md);
+        }
+        .skeleton--steps {
+            height: 100px;
+            width: 100%;
+            margin-bottom: var(--spacing-md);
+        }
+        .skeleton--btn {
+            height: 50px;
+            width: 100%;
+            border-radius: var(--radius-lg);
+        }
+
+        /* Actual result content */
+        .result-content { display: none; }
+        .result-content.show { display: block; }
 
         .result-header {
             text-align: center;
@@ -582,6 +998,9 @@
 </head>
 
 <body>
+    <!-- Top progress bar for loading states -->
+    <div class="top-progress-bar" id="top-progress-bar"></div>
+
     <section class="checkout">
         <div class="checkout__container">
             <div class="checkout__header">
@@ -589,7 +1008,36 @@
                 <p class="checkout__subtitle">Lengkapi data untuk melanjutkan pembayaran</p>
             </div>
 
-            <!-- TIER SELECTION -->
+            <!-- ===== PROGRESS STEPPER ===== -->
+            <div class="checkout__stepper">
+                <div class="stepper">
+                    <div class="stepper__step active" data-step="1">
+                        <div class="stepper__circle">
+                            <span class="stepper__num">1</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        </div>
+                        <span class="stepper__label">Info</span>
+                    </div>
+                    <div class="stepper__line" data-line="1"></div>
+                    <div class="stepper__step" data-step="2">
+                        <div class="stepper__circle">
+                            <span class="stepper__num">2</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        </div>
+                        <span class="stepper__label">Pilih Paket</span>
+                    </div>
+                    <div class="stepper__line" data-line="2"></div>
+                    <div class="stepper__step" data-step="3">
+                        <div class="stepper__circle">
+                            <span class="stepper__num">3</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        </div>
+                        <span class="stepper__label">Bayar</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== TIER SELECTION (Order Summary) ===== -->
             <div class="checkout__card" id="order-summary">
                 <div class="checkout__urgency">
                     🔥 SISA <strong>7</strong> SLOT — Harga naik setelah habis
@@ -601,6 +1049,7 @@
                     <div class="tier-card" id="tier-core"
                          data-tier="core"
                          data-amount="96000"
+                         data-original="196000"
                          data-name="AI Arbitrage Blueprint - Batch 8 Presale 2"
                          data-content-name="AI Arbitrage Blueprint - Batch 8">
                         <div class="tier-card__radio"></div>
@@ -621,6 +1070,7 @@
                     <div class="tier-card tier-card--featured" id="tier-fasttrack"
                          data-tier="fasttrack"
                          data-amount="289000"
+                         data-original="589000"
                          data-name="AI Arbitrage Blueprint + LinkedIn B2B Fast Track - Batch 8"
                          data-content-name="AI Arbitrage Blueprint - Batch 8 + Fast Track">
                         <div class="tier-card__badge">PALING POPULER</div>
@@ -644,6 +1094,7 @@
                     <div class="tier-card tier-card--elite" id="tier-elite"
                          data-tier="elite"
                          data-amount="489000"
+                         data-original="989000"
                          data-name="AI Arbitrage Blueprint + LinkedIn B2B Fast Track + 1-on-1 Coaching - Batch 8"
                          data-content-name="AI Arbitrage Blueprint - Batch 8 + Elite Coaching">
                         <div class="tier-card__badge">UNTUK YANG SERIUS</div>
@@ -664,31 +1115,80 @@
                     </div>
 
                 </div>
+
+                <!-- Order Breakdown (dynamically updated) -->
+                <div class="order-breakdown" id="order-breakdown">
+                    <div class="order-breakdown__row">
+                        <span class="order-breakdown__label" id="breakdown-tier-label">Paket Core</span>
+                        <span class="order-breakdown__value" id="breakdown-tier-price">Rp 96.000</span>
+                    </div>
+                    <div class="order-breakdown__row order-breakdown__row--total">
+                        <span class="order-breakdown__label">Total</span>
+                        <span class="order-breakdown__value" id="breakdown-total">Rp 96.000</span>
+                    </div>
+                    <div class="order-breakdown__savings" id="breakdown-savings">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                        <span id="savings-text">Hemat Rp 100.000 dari harga normal</span>
+                    </div>
+                </div>
+
+                <!-- Trust Badges -->
+                <div class="trust-badges">
+                    <div class="trust-badge">
+                        <div class="trust-badge__icon">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        </div>
+                        <span>Pembayaran terenkripsi & aman via payment gateway resmi</span>
+                    </div>
+                    <div class="trust-badge">
+                        <div class="trust-badge__icon">
+                            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </div>
+                        <span>Garansi 100% akses seumur hidup setelah pembayaran</span>
+                    </div>
+                    <div class="trust-badge">
+                        <div class="trust-badge__icon">
+                            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </div>
+                        <span>Bergabung dengan 500+ alumni yang sudah menghasilkan</span>
+                    </div>
+                </div>
             </div>
 
-            <!-- FORM CARD -->
+            <!-- ===== FORM CARD ===== -->
             <div class="checkout__card" id="form-card">
-                <form id="checkout-form" class="checkout__form">
+                <form id="checkout-form" class="checkout__form" novalidate>
+                    <div class="form-section-title">Data Diri</div>
+
                     <div class="form-group">
                         <label class="form-group__label" for="name">Nama Lengkap <span>*</span></label>
-                        <input type="text" id="name" name="name" class="form-group__input"
-                            placeholder="Masukkan nama lengkap lo" required />
-                        <div class="form-error" id="name-error">Nama wajib diisi</div>
+                        <div class="form-group__input-wrap">
+                            <input type="text" id="name" name="name" class="form-group__input"
+                                placeholder="Masukkan nama lengkap lo" required />
+                            <div class="form-group__status" id="name-status"></div>
+                        </div>
+                        <div class="form-error" id="name-error">Nama minimal 2 karakter</div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-group__label" for="email">Email <span>*</span></label>
-                        <input type="email" id="email" name="email" class="form-group__input"
-                            placeholder="email@example.com" required />
-                        <div class="form-error" id="email-error">Email tidak valid</div>
+                        <div class="form-group__input-wrap">
+                            <input type="email" id="email" name="email" class="form-group__input"
+                                placeholder="email@example.com" required />
+                            <div class="form-group__status" id="email-status"></div>
+                        </div>
+                        <div class="form-error" id="email-error">Format email tidak valid</div>
                         <div class="form-group__hint">Untuk akses course dan info penting</div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-group__label" for="whatsapp">Nomor WhatsApp <span>*</span></label>
-                        <input type="tel" id="whatsapp" name="whatsapp" class="form-group__input"
-                            placeholder="08xxxxxxxxxx" required />
-                        <div class="form-error" id="whatsapp-error">Nomor WhatsApp wajib diisi</div>
+                        <div class="form-group__input-wrap">
+                            <input type="tel" id="whatsapp" name="whatsapp" class="form-group__input"
+                                placeholder="08xxxxxxxxxx" required />
+                            <div class="form-group__status" id="whatsapp-status"></div>
+                        </div>
+                        <div class="form-error" id="whatsapp-error">Nomor WhatsApp tidak valid (min 10 digit)</div>
                         <div class="form-group__hint">Untuk konfirmasi dan masuk group</div>
                     </div>
 
@@ -698,25 +1198,91 @@
                     <div>
                         <div class="payment-section__title">Metode Pembayaran <span style="color: var(--color-error);">*</span></div>
                         <div class="payment-methods" id="payment-methods">
+                            <!-- BCA -->
                             <button type="button" class="payment-method-btn" data-method="va" data-channel="bca">
-                                <span style="font-weight:800;font-size:1.1rem;color:#003d79;">BCA</span>
+                                <div class="payment-method-btn__check">
+                                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                </div>
+                                <div class="payment-method-btn__icon">
+                                    <svg viewBox="0 0 40 40" fill="none">
+                                        <rect width="40" height="40" rx="8" fill="#003d79"/>
+                                        <text x="20" y="24" text-anchor="middle" font-size="11" font-weight="800" fill="white" font-family="Inter,sans-serif">BCA</text>
+                                    </svg>
+                                </div>
                                 <span class="payment-method-btn__name">BCA VA</span>
+                                <span class="payment-method-btn__desc">Virtual Account</span>
                             </button>
+
+                            <!-- Mandiri -->
                             <button type="button" class="payment-method-btn" data-method="va" data-channel="mandiri">
-                                <span style="font-weight:800;font-size:1rem;color:#003876;">Mandiri</span>
+                                <div class="payment-method-btn__check">
+                                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                </div>
+                                <div class="payment-method-btn__icon">
+                                    <svg viewBox="0 0 40 40" fill="none">
+                                        <rect width="40" height="40" rx="8" fill="#003876"/>
+                                        <text x="20" y="21" text-anchor="middle" font-size="7.5" font-weight="800" fill="#ffd700" font-family="Inter,sans-serif">mandiri</text>
+                                    </svg>
+                                </div>
                                 <span class="payment-method-btn__name">Mandiri VA</span>
+                                <span class="payment-method-btn__desc">Virtual Account</span>
                             </button>
+
+                            <!-- BNI -->
                             <button type="button" class="payment-method-btn" data-method="va" data-channel="bni">
-                                <span style="font-weight:800;font-size:1.2rem;color:#f60;">BNI</span>
+                                <div class="payment-method-btn__check">
+                                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                </div>
+                                <div class="payment-method-btn__icon">
+                                    <svg viewBox="0 0 40 40" fill="none">
+                                        <rect width="40" height="40" rx="8" fill="#f60"/>
+                                        <text x="20" y="24" text-anchor="middle" font-size="12" font-weight="800" fill="white" font-family="Inter,sans-serif">BNI</text>
+                                    </svg>
+                                </div>
                                 <span class="payment-method-btn__name">BNI VA</span>
+                                <span class="payment-method-btn__desc">Virtual Account</span>
                             </button>
+
+                            <!-- BRI -->
                             <button type="button" class="payment-method-btn" data-method="va" data-channel="bri">
-                                <span style="font-weight:800;font-size:1.1rem;color:#00529c;">BRI</span>
+                                <div class="payment-method-btn__check">
+                                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                </div>
+                                <div class="payment-method-btn__icon">
+                                    <svg viewBox="0 0 40 40" fill="none">
+                                        <rect width="40" height="40" rx="8" fill="#00529c"/>
+                                        <text x="20" y="24" text-anchor="middle" font-size="12" font-weight="800" fill="white" font-family="Inter,sans-serif">BRI</text>
+                                    </svg>
+                                </div>
                                 <span class="payment-method-btn__name">BRI VA</span>
+                                <span class="payment-method-btn__desc">Virtual Account</span>
                             </button>
+
+                            <!-- QRIS -->
                             <button type="button" class="payment-method-btn payment-method-btn--full" data-method="qris" data-channel="qris">
-                                <span style="font-size:1.5rem;">📱</span>
-                                <span class="payment-method-btn__name">QRIS — GoPay, OVO, Dana, ShopeePay</span>
+                                <div class="payment-method-btn__check">
+                                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                </div>
+                                <div class="payment-method-btn__icon">
+                                    <svg viewBox="0 0 40 40" fill="none">
+                                        <rect width="40" height="40" rx="8" fill="rgba(59,130,246,0.15)"/>
+                                        <!-- QR icon -->
+                                        <rect x="8" y="8" width="10" height="10" rx="1.5" stroke="#60a5fa" stroke-width="2" fill="none"/>
+                                        <rect x="11" y="11" width="4" height="4" rx="0.5" fill="#60a5fa"/>
+                                        <rect x="22" y="8" width="10" height="10" rx="1.5" stroke="#60a5fa" stroke-width="2" fill="none"/>
+                                        <rect x="25" y="11" width="4" height="4" rx="0.5" fill="#60a5fa"/>
+                                        <rect x="8" y="22" width="10" height="10" rx="1.5" stroke="#60a5fa" stroke-width="2" fill="none"/>
+                                        <rect x="11" y="25" width="4" height="4" rx="0.5" fill="#60a5fa"/>
+                                        <rect x="23" y="23" width="3" height="3" rx="0.5" fill="#60a5fa"/>
+                                        <rect x="28" y="23" width="3" height="3" rx="0.5" fill="#60a5fa"/>
+                                        <rect x="23" y="28" width="3" height="3" rx="0.5" fill="#60a5fa"/>
+                                        <rect x="28" y="28" width="3" height="3" rx="0.5" fill="#60a5fa"/>
+                                    </svg>
+                                </div>
+                                <div class="payment-method-btn__text">
+                                    <span class="payment-method-btn__name">QRIS</span>
+                                    <span class="payment-method-btn__desc">GoPay, OVO, Dana, ShopeePay, dll</span>
+                                </div>
                             </button>
                         </div>
                         <div class="form-error" id="payment-error">Pilih metode pembayaran</div>
@@ -724,70 +1290,93 @@
 
                     <button type="submit" id="pay-button"
                         class="btn btn--primary btn--large btn--full checkout__submit">
-                        Bayar Sekarang — Rp 96.000
+                        <span class="btn-spinner"></span>
+                        <span class="btn-text">Bayar Sekarang — Rp 96.000</span>
                     </button>
                     <div id="tier-summary" style="text-align:center;font-size:0.7rem;color:var(--color-text-muted);margin-top:6px;">Paket Core dipilih</div>
                 </form>
 
                 <div class="checkout__secure">
-                    🔒 Pembayaran aman & terenkripsi
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-text-muted)"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    Pembayaran aman & terenkripsi
                 </div>
             </div>
 
-            <!-- PAYMENT RESULT (hidden until created) -->
+            <!-- ===== PAYMENT RESULT (hidden until created) ===== -->
             <div class="checkout__card payment-result" id="payment-result">
-                <div class="result-header">
-                    <div class="result-header__icon">✅</div>
-                    <div class="result-header__title">Segera Selesaikan Pembayaran</div>
-                    <div class="result-header__bank" id="result-bank"></div>
+
+                <!-- Skeleton loading state -->
+                <div class="skeleton-container" id="result-skeleton">
+                    <div class="skeleton skeleton--circle"></div>
+                    <div class="skeleton skeleton--title"></div>
+                    <div class="skeleton skeleton--subtitle"></div>
+                    <div class="skeleton skeleton--bar"></div>
+                    <div class="skeleton skeleton--box"></div>
+                    <div class="skeleton skeleton--text"></div>
+                    <div class="skeleton skeleton--steps"></div>
+                    <div class="skeleton skeleton--btn"></div>
                 </div>
 
-                <div class="result-amount">
-                    <span class="result-amount__label">Total Bayar</span>
-                    <span class="result-amount__value" id="result-amount"></span>
-                </div>
-
-                <!-- VA display -->
-                <div class="va-box" id="va-box">
-                    <div class="va-box__label">Nomor Virtual Account</div>
-                    <div class="va-box__number" id="va-number"></div>
-                    <button class="va-box__copy" id="copy-btn">Salin Nomor</button>
-                </div>
-
-                <!-- QRIS display -->
-                <div class="qris-box" id="qris-box">
-                    <div class="qris-box__label">Scan QR Code di bawah</div>
-                    <img id="qris-image" class="qris-box__image" src="" alt="QRIS Code" />
-                </div>
-
-                <div class="result-expired" id="result-expired"></div>
-
-                <div class="result-steps">
-                    <div class="result-steps__item">
-                        <span class="result-steps__num">1</span>
-                        <span>Salin nomor VA / scan QRIS di atas</span>
+                <!-- Actual result content -->
+                <div class="result-content" id="result-content">
+                    <div class="result-header">
+                        <div class="result-header__icon">
+                            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                <circle cx="24" cy="24" r="22" stroke="#22c55e" stroke-width="3" fill="rgba(34,197,94,0.1)"/>
+                                <polyline points="14,24 22,32 34,18" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="result-header__title">Segera Selesaikan Pembayaran</div>
+                        <div class="result-header__bank" id="result-bank"></div>
                     </div>
-                    <div class="result-steps__item">
-                        <span class="result-steps__num">2</span>
-                        <span>Buka aplikasi bank / e-wallet dan transfer sesuai nominal</span>
-                    </div>
-                    <div class="result-steps__item">
-                        <span class="result-steps__num">3</span>
-                        <span>Pembayaran diverifikasi otomatis, klik tombol di bawah</span>
-                    </div>
-                </div>
 
-                <div class="payment-status payment-status--waiting" id="payment-status">
-                    <div class="payment-status__spinner"></div>
-                    <span id="payment-status-text">Menunggu pembayaran...</span>
-                </div>
+                    <div class="result-amount">
+                        <span class="result-amount__label">Total Bayar</span>
+                        <span class="result-amount__value" id="result-amount"></span>
+                    </div>
 
-                <a href="#" id="done-btn" class="result-done result-done--disabled" onclick="return false;">
-                    Menunggu konfirmasi pembayaran...
-                </a>
+                    <!-- VA display -->
+                    <div class="va-box" id="va-box">
+                        <div class="va-box__label">Nomor Virtual Account</div>
+                        <div class="va-box__number" id="va-number"></div>
+                        <button class="va-box__copy" id="copy-btn">Salin Nomor</button>
+                    </div>
+
+                    <!-- QRIS display -->
+                    <div class="qris-box" id="qris-box">
+                        <div class="qris-box__label">Scan QR Code di bawah</div>
+                        <img id="qris-image" class="qris-box__image" src="" alt="QRIS Code" />
+                    </div>
+
+                    <div class="result-expired" id="result-expired"></div>
+
+                    <div class="result-steps">
+                        <div class="result-steps__item">
+                            <span class="result-steps__num">1</span>
+                            <span>Salin nomor VA / scan QRIS di atas</span>
+                        </div>
+                        <div class="result-steps__item">
+                            <span class="result-steps__num">2</span>
+                            <span>Buka aplikasi bank / e-wallet dan transfer sesuai nominal</span>
+                        </div>
+                        <div class="result-steps__item">
+                            <span class="result-steps__num">3</span>
+                            <span>Pembayaran diverifikasi otomatis, klik tombol di bawah</span>
+                        </div>
+                    </div>
+
+                    <div class="payment-status payment-status--waiting" id="payment-status">
+                        <div class="payment-status__spinner"></div>
+                        <span id="payment-status-text">Menunggu pembayaran...</span>
+                    </div>
+
+                    <a href="#" id="done-btn" class="result-done result-done--disabled" onclick="return false;">
+                        Menunggu konfirmasi pembayaran...
+                    </a>
+                </div>
             </div>
 
-            <a href="/" class="checkout__back">← Kembali ke halaman utama</a>
+            <a href="/" class="checkout__back">&larr; Kembali ke halaman utama</a>
         </div>
     </section>
 
@@ -803,28 +1392,75 @@
             } catch (error) { console.log('Tracking error:', error); }
         })();
 
-        const form = document.getElementById('checkout-form');
-        const payButton = document.getElementById('pay-button');
-        let selectedMethod = null;
-        let selectedChannel = null;
+        var form = document.getElementById('checkout-form');
+        var payButton = document.getElementById('pay-button');
+        var btnText = payButton.querySelector('.btn-text');
+        var topProgressBar = document.getElementById('top-progress-bar');
+        var selectedMethod = null;
+        var selectedChannel = null;
+
+        // ===== STEPPER LOGIC =====
+        var currentStep = 1;
+
+        function updateStepper(step) {
+            currentStep = step;
+            document.querySelectorAll('.stepper__step').forEach(function(el) {
+                var s = parseInt(el.dataset.step);
+                el.classList.remove('active', 'completed');
+                if (s < step) el.classList.add('completed');
+                else if (s === step) el.classList.add('active');
+            });
+            document.querySelectorAll('.stepper__line').forEach(function(el) {
+                var l = parseInt(el.dataset.line);
+                if (l < step) el.classList.add('completed');
+                else el.classList.remove('completed');
+            });
+        }
+
+        // Auto-advance stepper based on form interaction
+        function checkStepperProgress() {
+            var nameVal = document.getElementById('name').value.trim();
+            var emailVal = document.getElementById('email').value.trim();
+            var waVal = document.getElementById('whatsapp').value.trim();
+
+            if (nameVal.length >= 2 && isValidEmail(emailVal) && isValidWhatsApp(waVal)) {
+                if (document.querySelector('.tier-card.selected')) {
+                    if (currentStep < 3) updateStepper(3);
+                } else {
+                    if (currentStep < 2) updateStepper(2);
+                }
+            } else {
+                updateStepper(1);
+            }
+        }
 
         // ===== TIER SELECTION =====
-        let selectedTierAmount = 96000;
-        let selectedTierName = 'AI Arbitrage Blueprint - Batch 8 Presale 2';
-        let selectedTierContentName = 'AI Arbitrage Blueprint - Batch 8';
-        let selectedTierLabel = 'Paket Core';
+        var selectedTierAmount = 96000;
+        var selectedTierName = 'AI Arbitrage Blueprint - Batch 8 Presale 2';
+        var selectedTierContentName = 'AI Arbitrage Blueprint - Batch 8';
+        var selectedTierLabel = 'Paket Core';
 
         function formatIDR(n) { return 'Rp ' + n.toLocaleString('id-ID'); }
 
         function selectTier(card) {
-            document.querySelectorAll('.tier-card').forEach(c => c.classList.remove('selected'));
+            document.querySelectorAll('.tier-card').forEach(function(c) { c.classList.remove('selected'); });
             card.classList.add('selected');
             selectedTierAmount = parseInt(card.dataset.amount);
             selectedTierName = card.dataset.name;
             selectedTierContentName = card.dataset.contentName;
             selectedTierLabel = card.querySelector('.tier-card__name').textContent;
-            payButton.textContent = 'Bayar Sekarang — ' + formatIDR(selectedTierAmount);
+
+            // Update button text
+            btnText.textContent = 'Bayar Sekarang \u2014 ' + formatIDR(selectedTierAmount);
+
+            // Update tier summary
             document.getElementById('tier-summary').textContent = selectedTierLabel + ' dipilih';
+
+            // Update order breakdown
+            updateOrderBreakdown(card);
+
+            // Update stepper
+            checkStepperProgress();
 
             // Fire InitiateCheckout pixel with actual selected tier value
             fbq('track', 'InitiateCheckout', {
@@ -835,64 +1471,182 @@
             }, { eventID: 'IC_' + card.dataset.tier + '_' + Date.now() });
         }
 
-        document.querySelectorAll('.tier-card').forEach(card => {
-            card.addEventListener('click', () => selectTier(card));
+        function updateOrderBreakdown(card) {
+            var amount = parseInt(card.dataset.amount);
+            var original = parseInt(card.dataset.original) || 0;
+            var label = card.querySelector('.tier-card__name').textContent;
+
+            document.getElementById('breakdown-tier-label').textContent = label;
+            document.getElementById('breakdown-tier-price').textContent = formatIDR(amount);
+            document.getElementById('breakdown-total').textContent = formatIDR(amount);
+
+            var savingsEl = document.getElementById('breakdown-savings');
+            if (original > amount) {
+                var saved = original - amount;
+                document.getElementById('savings-text').textContent = 'Hemat ' + formatIDR(saved) + ' dari harga normal';
+                savingsEl.classList.remove('hidden');
+            } else {
+                savingsEl.classList.add('hidden');
+            }
+        }
+
+        document.querySelectorAll('.tier-card').forEach(function(card) {
+            card.addEventListener('click', function() { selectTier(card); });
         });
 
         // Auto-select Core (Tier 1) on load and fire InitiateCheckout
         selectTier(document.getElementById('tier-core'));
 
-        // Payment method selection
-        document.querySelectorAll('.payment-method-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.payment-method-btn').forEach(b => b.classList.remove('selected'));
+        // ===== PAYMENT METHOD SELECTION =====
+        document.querySelectorAll('.payment-method-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.payment-method-btn').forEach(function(b) { b.classList.remove('selected'); });
                 btn.classList.add('selected');
                 selectedMethod = btn.dataset.method;
                 selectedChannel = btn.dataset.channel;
-                document.getElementById('payment-error').style.display = 'none';
+                document.getElementById('payment-error').classList.remove('show');
             });
         });
 
+        // ===== INLINE VALIDATION =====
         function isValidEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
-        function isValidWhatsApp(phone) { const d = phone.replace(/\D/g, ''); return d.length >= 10 && d.length <= 15; }
+        function isValidWhatsApp(phone) { var d = phone.replace(/\D/g, ''); return d.length >= 10 && d.length <= 15; }
+
+        // Status icon SVGs
+        var checkSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+        var errorSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+
+        function setFieldValid(inputId) {
+            var input = document.getElementById(inputId);
+            var status = document.getElementById(inputId + '-status');
+            var errorEl = document.getElementById(inputId + '-error');
+            input.classList.remove('error');
+            input.classList.add('valid');
+            status.innerHTML = checkSVG;
+            status.classList.add('show');
+            errorEl.classList.remove('show');
+        }
+
+        function setFieldInvalid(inputId) {
+            var input = document.getElementById(inputId);
+            var status = document.getElementById(inputId + '-status');
+            var errorEl = document.getElementById(inputId + '-error');
+            input.classList.remove('valid');
+            input.classList.add('error');
+            status.innerHTML = errorSVG;
+            status.classList.add('show');
+            errorEl.classList.add('show');
+        }
+
+        function clearFieldState(inputId) {
+            var input = document.getElementById(inputId);
+            var status = document.getElementById(inputId + '-status');
+            var errorEl = document.getElementById(inputId + '-error');
+            input.classList.remove('error', 'valid');
+            status.classList.remove('show');
+            status.innerHTML = '';
+            errorEl.classList.remove('show');
+        }
+
+        // Validate on blur
+        document.getElementById('name').addEventListener('blur', function() {
+            var val = this.value.trim();
+            if (val.length === 0) { clearFieldState('name'); }
+            else if (val.length < 2) { setFieldInvalid('name'); }
+            else { setFieldValid('name'); }
+            checkStepperProgress();
+        });
+
+        document.getElementById('email').addEventListener('blur', function() {
+            var val = this.value.trim();
+            if (val.length === 0) { clearFieldState('email'); }
+            else if (!isValidEmail(val)) { setFieldInvalid('email'); }
+            else { setFieldValid('email'); }
+            checkStepperProgress();
+        });
+
+        document.getElementById('whatsapp').addEventListener('blur', function() {
+            var val = this.value.trim();
+            if (val.length === 0) { clearFieldState('whatsapp'); }
+            else if (!isValidWhatsApp(val)) { setFieldInvalid('whatsapp'); }
+            else { setFieldValid('whatsapp'); }
+            checkStepperProgress();
+        });
+
+        // Phone auto-format: replace leading 0 with +62
+        document.getElementById('whatsapp').addEventListener('input', function() {
+            var val = this.value;
+            // If user types "0" at the start, auto-replace with +62
+            if (val.match(/^0/)) {
+                this.value = '+62' + val.substring(1);
+            }
+            // If user types without + but starts with 62
+            if (val.match(/^62/) && !val.match(/^\+62/)) {
+                this.value = '+' + val;
+            }
+        });
+
+        // Also update stepper and clear error on input events
+        document.getElementById('name').addEventListener('input', function() {
+            if (this.classList.contains('error') && this.value.trim().length >= 2) {
+                setFieldValid('name');
+            }
+            checkStepperProgress();
+        });
+        document.getElementById('email').addEventListener('input', function() {
+            if (this.classList.contains('error') && isValidEmail(this.value.trim())) {
+                setFieldValid('email');
+            }
+            checkStepperProgress();
+        });
+        document.getElementById('whatsapp').addEventListener('input', function() {
+            if (this.classList.contains('error') && isValidWhatsApp(this.value.trim())) {
+                setFieldValid('whatsapp');
+            }
+            checkStepperProgress();
+        });
 
         function clearErrors() {
-            document.querySelectorAll('.form-error').forEach(el => el.style.display = 'none');
-            document.querySelectorAll('.form-group__input').forEach(el => el.classList.remove('error'));
-        }
-        function showError(inputId, errorId) {
-            document.getElementById(inputId).classList.add('error');
-            document.getElementById(errorId).style.display = 'block';
+            document.querySelectorAll('.form-error').forEach(function(el) { el.classList.remove('show'); });
+            document.querySelectorAll('.form-group__input').forEach(function(el) { el.classList.remove('error'); });
         }
 
         // Copy VA number
-        document.getElementById('copy-btn').addEventListener('click', () => {
-            const vaNum = document.getElementById('va-number').textContent;
-            navigator.clipboard.writeText(vaNum).then(() => {
-                const btn = document.getElementById('copy-btn');
+        document.getElementById('copy-btn').addEventListener('click', function() {
+            var vaNum = document.getElementById('va-number').textContent;
+            navigator.clipboard.writeText(vaNum).then(function() {
+                var btn = document.getElementById('copy-btn');
                 btn.textContent = 'Tersalin!';
                 btn.classList.add('copied');
-                setTimeout(() => { btn.textContent = 'Salin Nomor'; btn.classList.remove('copied'); }, 2000);
+                setTimeout(function() { btn.textContent = 'Salin Nomor'; btn.classList.remove('copied'); }, 2000);
             });
         });
 
-        form.addEventListener('submit', async (e) => {
+        // ===== FORM SUBMIT =====
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
             clearErrors();
 
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const whatsapp = document.getElementById('whatsapp').value.trim();
-            let hasError = false;
+            var nameVal = document.getElementById('name').value.trim();
+            var emailVal = document.getElementById('email').value.trim();
+            var whatsappVal = document.getElementById('whatsapp').value.trim();
+            var hasError = false;
 
-            if (!name) { showError('name', 'name-error'); hasError = true; }
-            if (!email || !isValidEmail(email)) { showError('email', 'email-error'); hasError = true; }
-            if (!whatsapp || !isValidWhatsApp(whatsapp)) { showError('whatsapp', 'whatsapp-error'); hasError = true; }
+            if (!nameVal || nameVal.length < 2) { setFieldInvalid('name'); hasError = true; }
+            if (!emailVal || !isValidEmail(emailVal)) { setFieldInvalid('email'); hasError = true; }
+            if (!whatsappVal || !isValidWhatsApp(whatsappVal)) { setFieldInvalid('whatsapp'); hasError = true; }
             if (!selectedMethod || !selectedChannel) {
-                document.getElementById('payment-error').style.display = 'block';
+                document.getElementById('payment-error').classList.add('show');
                 hasError = true;
             }
-            if (hasError) return;
+
+            if (hasError) {
+                // Shake the form card
+                var formCard = document.getElementById('form-card');
+                formCard.classList.add('shake');
+                setTimeout(function() { formCard.classList.remove('shake'); }, 500);
+                return;
+            }
 
             fbq('track', 'AddPaymentInfo', {
                 content_name: selectedTierContentName,
@@ -901,19 +1655,22 @@
                 currency: 'IDR'
             }, { eventID: 'API_' + Date.now() });
 
+            // Loading state
             payButton.disabled = true;
-            payButton.textContent = 'Memproses...';
+            payButton.classList.add('loading');
+            btnText.textContent = 'Memproses...';
+            topProgressBar.classList.add('active');
 
             try {
-                const response = await fetch('/api/create-transaction', {
+                var response = await fetch('/api/create-transaction', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         amount: selectedTierAmount,
                         product: selectedTierName,
-                        customerName: name,
-                        customerEmail: email,
-                        customerPhone: whatsapp,
+                        customerName: nameVal,
+                        customerEmail: emailVal,
+                        customerPhone: whatsappVal,
                         paymentMethod: selectedMethod,
                         paymentChannel: selectedChannel,
                         fbc: getCookie('_fbc'),
@@ -922,17 +1679,17 @@
                 });
 
                 if (!response.ok) {
-                    const errData = await response.json();
+                    var errData = await response.json();
                     console.error('API error response:', JSON.stringify(errData, null, 2));
-                    const detail = errData.details ? JSON.stringify(errData.details) : '';
+                    var detail = errData.details ? JSON.stringify(errData.details) : '';
                     throw new Error((errData.error || 'Failed to create transaction') + (detail ? ' | ' + detail : ''));
                 }
 
-                const data = await response.json();
+                var data = await response.json();
 
-                localStorage.setItem('customerName', name);
-                localStorage.setItem('customerEmail', email);
-                localStorage.setItem('customerWhatsApp', whatsapp);
+                localStorage.setItem('customerName', nameVal);
+                localStorage.setItem('customerEmail', emailVal);
+                localStorage.setItem('customerWhatsApp', whatsappVal);
                 localStorage.setItem('orderId', data.order_id);
                 localStorage.setItem('paymentAmount', selectedTierAmount.toString());
                 localStorage.setItem('paymentTierLabel', selectedTierLabel);
@@ -945,7 +1702,7 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             event: 'payment_initiated',
-                            customer: { name, email, whatsapp },
+                            customer: { name: nameVal, email: emailVal, whatsapp: whatsappVal },
                             order: { order_id: data.order_id, transaction_id: data.transaction_id },
                             payment: { method: selectedMethod, channel: selectedChannel, payment_no: data.payment_no },
                             product: selectedTierName,
@@ -954,24 +1711,68 @@
                             timestamp: new Date().toISOString(),
                         }),
                     });
-                } catch (e) { console.error('Webhook error:', e); }
+                } catch (webhookErr) { console.error('Webhook error:', webhookErr); }
+
+                // Stop progress bar
+                topProgressBar.classList.remove('active');
+                topProgressBar.style.width = '100%';
+                setTimeout(function() { topProgressBar.style.width = '0'; }, 400);
 
                 showPaymentResult(data);
 
             } catch (error) {
                 console.error('Payment error:', error);
-                alert('Terjadi kesalahan: ' + error.message);
+                // Inline error toast instead of alert()
+                showInlineError('Terjadi kesalahan: ' + error.message);
                 resetButton();
+                topProgressBar.classList.remove('active');
+                topProgressBar.style.width = '0';
             }
         });
+
+        // Inline error message (replaces alert)
+        function showInlineError(message) {
+            var existing = document.getElementById('inline-error-toast');
+            if (existing) existing.remove();
+
+            var toast = document.createElement('div');
+            toast.id = 'inline-error-toast';
+            toast.style.cssText = 'position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:9999;background:#1c1011;border:1px solid rgba(248,113,113,0.4);color:#f87171;padding:12px 20px;border-radius:12px;font-size:0.85rem;font-weight:600;max-width:90%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.4);animation:shake 0.5s ease;';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(function() {
+                toast.style.transition = 'opacity 0.3s';
+                toast.style.opacity = '0';
+                setTimeout(function() { toast.remove(); }, 300);
+            }, 5000);
+        }
 
         function showPaymentResult(data) {
             document.getElementById('form-card').style.display = 'none';
             document.getElementById('order-summary').style.display = 'none';
-            const resultCard = document.getElementById('payment-result');
+            var resultCard = document.getElementById('payment-result');
             resultCard.classList.add('show');
 
-            const channelNames = {
+            // Show skeleton first
+            document.getElementById('result-skeleton').classList.add('show');
+            document.getElementById('result-content').classList.remove('show');
+
+            // Update stepper to completed
+            updateStepper(4); // All completed
+
+            resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            // Simulate brief loading then reveal content
+            setTimeout(function() {
+                populateResultContent(data);
+                document.getElementById('result-skeleton').classList.remove('show');
+                document.getElementById('result-content').classList.add('show');
+            }, 800);
+        }
+
+        function populateResultContent(data) {
+            var channelNames = {
                 bca: 'BCA Virtual Account',
                 mandiri: 'Mandiri Virtual Account',
                 bni: 'BNI Virtual Account',
@@ -980,7 +1781,7 @@
             };
             document.getElementById('result-bank').textContent = channelNames[selectedChannel] || selectedChannel.toUpperCase();
 
-            const total = data.total || selectedTierAmount;
+            var total = data.total || selectedTierAmount;
             document.getElementById('result-amount').textContent = 'Rp ' + parseInt(total).toLocaleString('id-ID');
 
             if (selectedMethod === 'qris' && (data.qris_url || data.qr_string)) {
@@ -998,10 +1799,8 @@
             }
 
             if (data.expired) {
-                document.getElementById('result-expired').textContent = '⏱ Bayar sebelum: ' + data.expired;
+                document.getElementById('result-expired').innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-text-muted)"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Bayar sebelum: ' + data.expired;
             }
-
-            resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
             // Start polling payment status
             startPaymentPolling(data.transaction_id, data.order_id);
@@ -1009,20 +1808,20 @@
 
         // Read Meta cookies for CAPI match quality
         function getCookie(name) {
-            const match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+            var match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
             return match ? decodeURIComponent(match[1]) : '';
         }
 
-        let pollingInterval = null;
+        var pollingInterval = null;
 
         function startPaymentPolling(transactionId, orderId) {
-            let attempts = 0;
-            const maxAttempts = 180; // 15 minutes (every 5s)
+            var attempts = 0;
+            var maxAttempts = 180; // 15 minutes (every 5s)
 
             // Gather customer data + Meta cookies once for all poll requests
-            const pollPayload = {
-                transactionId,
-                orderId,
+            var pollPayload = {
+                transactionId: transactionId,
+                orderId: orderId,
                 customerName: localStorage.getItem('customerName') || '',
                 customerEmail: localStorage.getItem('customerEmail') || '',
                 customerPhone: localStorage.getItem('customerWhatsApp') || '',
@@ -1033,12 +1832,12 @@
             async function checkPayment() {
                 attempts++;
                 try {
-                    const resp = await fetch('/api/check-status', {
+                    var resp = await fetch('/api/check-status', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(pollPayload),
                     });
-                    const result = await resp.json();
+                    var result = await resp.json();
                     console.log('Poll #' + attempts, 'result:', JSON.stringify(result));
 
                     if (result.paid) {
@@ -1046,8 +1845,8 @@
                         onPaymentConfirmed(orderId, transactionId);
                         return;
                     }
-                } catch (e) {
-                    console.error('Poll error:', e);
+                } catch (pollErr) {
+                    console.error('Poll error:', pollErr);
                 }
 
                 if (attempts >= maxAttempts) {
@@ -1063,15 +1862,15 @@
 
         function onPaymentConfirmed(orderId, transactionId) {
             // Update status indicator
-            const statusEl = document.getElementById('payment-status');
+            var statusEl = document.getElementById('payment-status');
             statusEl.classList.remove('payment-status--waiting');
             statusEl.classList.add('payment-status--paid');
-            statusEl.innerHTML = '<span style="font-size:1.2rem">✅</span> <span id="payment-status-text">Pembayaran berhasil diterima!</span>';
+            statusEl.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> <span id="payment-status-text">Pembayaran berhasil diterima!</span>';
 
             // Enable done button
-            const doneBtn = document.getElementById('done-btn');
+            var doneBtn = document.getElementById('done-btn');
             doneBtn.classList.remove('result-done--disabled');
-            const thankYouUrl = '/thank-you.html?order_id=' + orderId + '&trx_id=' + transactionId;
+            var thankYouUrl = '/thank-you.html?order_id=' + orderId + '&trx_id=' + transactionId;
             doneBtn.href = thankYouUrl;
             doneBtn.onclick = null;
             doneBtn.textContent = 'Mengalihkan ke halaman konfirmasi...';
@@ -1084,7 +1883,8 @@
 
         function resetButton() {
             payButton.disabled = false;
-            payButton.textContent = 'Bayar Sekarang — Rp 96.000';
+            payButton.classList.remove('loading');
+            btnText.textContent = 'Bayar Sekarang \u2014 ' + formatIDR(selectedTierAmount);
         }
     </script>
 </body>
